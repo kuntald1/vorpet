@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CurryCloud — Restaurant Management Software</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#1a3a1c;--green-mid:#2d6a30;--green-light:#e8f5e0;--green-accent:#4caf50;
+  --cream:#faf8f3;--dark:#0f1a10;--text:#1c2b1e;--muted:#5a7060;
+  --amber:#f59e0b;--red:#dc2626;--card:#ffffff;--border:#d4e6d6;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden}
+
+/* NAV */
+nav{display:none;position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(250,248,243,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--green);text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav-logo span{color:var(--green-accent)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{text-decoration:none;color:var(--muted);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--green)}
+.nav-cta{background:var(--green);color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:500;transition:background .2s}
+.nav-cta:hover{background:var(--green-mid)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px 40px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 50%,#c8e6c9 0%,transparent 60%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:0.3;pointer-events:none}
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:var(--green-light);color:var(--green);padding:6px 14px;border-radius:100px;font-size:12px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-bottom:24px;border:1px solid #b8ddb8}
+.hero-tag::before{content:'';width:8px;height:8px;background:var(--green-accent);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+h1{font-family:'Syne',sans-serif;font-size:clamp(38px,5vw,62px);font-weight:800;line-height:1.1;color:var(--dark);margin-bottom:24px}
+h1 em{font-style:normal;color:var(--green-accent)}
+.hero-sub{font-size:17px;color:var(--muted);line-height:1.7;max-width:480px;margin-bottom:40px;font-weight:300}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap}
+.btn-primary{background:var(--green);color:#fff;padding:14px 32px;border-radius:10px;text-decoration:none;font-size:15px;font-weight:500;transition:all .2s;display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer}
+.btn-primary:hover{background:var(--green-mid);transform:translateY(-2px)}
+.btn-outline{border:1.5px solid var(--green);color:var(--green);padding:14px 32px;border-radius:10px;text-decoration:none;font-size:15px;font-weight:500;transition:all .2s;display:inline-flex;align-items:center;gap:8px;background:transparent;cursor:pointer}
+.btn-outline:hover{background:var(--green-light)}
+.hero-stats{display:flex;gap:40px;margin-top:48px;flex-wrap:wrap}
+.stat{border-left:3px solid var(--green-accent);padding-left:16px}
+.stat-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--dark)}
+.stat-label{font-size:12px;color:var(--muted);font-weight:300;margin-top:2px}
+
+/* HERO VISUAL */
+.dashboard-mockup{background:#fff;border-radius:20px;border:1px solid var(--border);padding:20px;box-shadow:0 40px 80px rgba(26,58,28,0.12)}
+.mockup-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #f0f0f0}
+.mockup-dot{width:10px;height:10px;border-radius:50%}
+.mockup-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.mockup-card{background:var(--cream);border-radius:10px;padding:10px;border:1px solid var(--border)}
+.mockup-card-label{font-size:9px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+.mockup-card-val{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--dark)}
+.mockup-card-change{font-size:9px;color:var(--green-accent);margin-top:2px}
+.mockup-order{background:var(--green-light);border-radius:8px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.mockup-badge{font-size:9px;padding:3px 8px;border-radius:100px;font-weight:600}
+.badge-draft{background:#fef3c7;color:#92400e}
+.badge-kot{background:#dbeafe;color:#1e40af}
+.badge-billed{background:#d1fae5;color:#065f46}
+.offline-pill{position:absolute;top:-12px;right:20px;background:var(--red);color:#fff;padding:6px 14px;border-radius:100px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:6px}
+
+/* WORKFLOW VIDEO SECTION */
+.workflow-section{background:var(--dark);padding:100px 40px;position:relative;overflow:hidden}
+.workflow-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 20% 50%,rgba(76,175,80,0.12) 0%,transparent 60%);pointer-events:none}
+.workflow-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.workflow-header{text-align:center;margin-bottom:60px}
+.workflow-title{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;color:#fff;margin-bottom:16px}
+.workflow-sub{font-size:16px;color:rgba(255,255,255,0.6);font-weight:300;max-width:500px;margin:0 auto}
+
+/* ANIMATED WORKFLOW */
+.flow-demo{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:40px;max-width:900px;margin:0 auto}
+.flow-screen{display:none}
+.flow-screen.active{display:block}
+.flow-steps-nav{display:flex;justify-content:center;gap:8px;margin-bottom:40px;flex-wrap:wrap}
+.flow-step-btn{width:36px;height:6px;background:rgba(255,255,255,0.15);border-radius:3px;border:none;cursor:pointer;transition:all .3s}
+.flow-step-btn.active{background:var(--green-accent);width:48px}
+.flow-content{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.flow-left{}
+.flow-step-num{font-size:11px;font-weight:600;color:var(--green-accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.flow-step-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:12px;line-height:1.2}
+.flow-step-desc{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.7;font-weight:300;margin-bottom:24px}
+.flow-details{display:flex;flex-direction:column;gap:10px}
+.flow-detail{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.7)}
+.flow-detail::before{content:'';width:6px;height:6px;background:var(--green-accent);border-radius:50%;flex-shrink:0}
+.flow-right{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;min-height:280px;display:flex;flex-direction:column;justify-content:center}
+.flow-mockup-title{font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px}
+.flow-nav-btns{display:flex;justify-content:center;gap:16px;margin-top:32px}
+.flow-nav-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:10px 24px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .2s}
+.flow-nav-btn:hover{background:rgba(255,255,255,0.15)}
+.flow-nav-btn.primary{background:var(--green-accent);border-color:var(--green-accent);color:var(--dark);font-weight:600}
+
+/* Table grid mockup */
+.table-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.table-item{border-radius:10px;padding:12px;text-align:center;border:1.5px solid transparent;cursor:pointer;transition:all .2s}
+.table-free{background:rgba(76,175,80,0.15);border-color:rgba(76,175,80,0.3)}
+.table-occupied{background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.3)}
+.table-selected{background:rgba(76,175,80,0.3);border-color:var(--green-accent);box-shadow:0 0 0 2px rgba(76,175,80,0.3)}
+.table-icon-f{font-size:18px;margin-bottom:4px}
+.table-name{font-size:11px;font-weight:600;color:#fff}
+.table-seats{font-size:9px;color:rgba(255,255,255,0.5);margin-top:2px}
+.table-status{font-size:8px;padding:2px 6px;border-radius:100px;margin-top:4px;display:inline-block}
+.ts-free{background:rgba(76,175,80,0.2);color:#86efac}
+.ts-occ{background:rgba(245,158,11,0.2);color:#fcd34d}
+
+/* Menu mockup */
+.menu-items{display:flex;flex-direction:column;gap:8px}
+.menu-item{background:rgba(255,255,255,0.06);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(255,255,255,0.06)}
+.menu-item.selected{background:rgba(76,175,80,0.15);border-color:rgba(76,175,80,0.4)}
+.menu-item-name{font-size:13px;color:#fff;font-weight:400}
+.menu-item-price{font-size:12px;color:var(--green-accent);font-weight:600}
+.menu-item-qty{display:flex;align-items:center;gap:8px}
+.qty-btn{width:22px;height:22px;background:rgba(255,255,255,0.1);border:none;border-radius:4px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qty-num{font-size:12px;color:#fff;font-weight:600;min-width:16px;text-align:center}
+
+/* KOT mockup */
+.kot-ticket{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px}
+.kot-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:12px;border-bottom:1px dashed rgba(255,255,255,0.1)}
+.kot-num{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff}
+.kot-table{font-size:11px;color:rgba(255,255,255,0.5)}
+.kot-item{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.8);padding:5px 0}
+.kot-status{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;font-size:11px;font-weight:600;margin-top:12px}
+.ks-open{background:rgba(245,158,11,0.2);color:#fcd34d}
+.ks-cooking{background:rgba(59,130,246,0.2);color:#93c5fd}
+.ks-ready{background:rgba(76,175,80,0.2);color:#86efac}
+.progress-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:12px;overflow:hidden}
+.progress-fill{height:100%;border-radius:2px;transition:width 1s ease}
+
+/* Bill mockup */
+.bill-modal{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px}
+.bill-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;text-align:center}
+.bill-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;color:rgba(255,255,255,0.7)}
+.bill-row.total{border-top:1px dashed rgba(255,255,255,0.15);padding-top:10px;margin-top:6px;font-size:15px;font-weight:700;color:#fff}
+.pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.pay-method{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;text-align:center;cursor:pointer;transition:all .2s}
+.pay-method.selected{background:rgba(76,175,80,0.2);border-color:var(--green-accent)}
+.pay-method-icon{font-size:14px;margin-bottom:3px}
+.pay-method-label{font-size:9px;color:rgba(255,255,255,0.7);font-weight:500}
+
+/* FEATURES */
+.section{padding:100px 40px;max-width:1200px;margin:0 auto}
+.section-tag{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--green-accent);margin-bottom:12px}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;color:var(--dark);margin-bottom:16px;line-height:1.15}
+.section-sub{font-size:16px;color:var(--muted);max-width:520px;line-height:1.7;font-weight:300;margin-bottom:60px}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s;position:relative;overflow:hidden}
+.feature-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(26,58,28,0.1);border-color:#b8ddb8}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--green-accent);transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.feature-card:hover::before{transform:scaleX(1)}
+.feature-icon{width:44px;height:44px;background:var(--green-light);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:20px}
+.feature-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--dark);margin-bottom:8px}
+.feature-desc{font-size:13px;color:var(--muted);line-height:1.7;font-weight:300}
+.feature-tag{display:inline-flex;align-items:center;gap:5px;background:var(--green-light);color:var(--green);padding:3px 10px;border-radius:100px;font-size:10px;font-weight:500;margin-top:12px;border:1px solid #b8ddb8}
+
+/* OFFLINE */
+.offline-section{background:var(--dark);color:#fff;padding:100px 40px;position:relative;overflow:hidden}
+.offline-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 30% 50%,rgba(76,175,80,0.12) 0%,transparent 60%);pointer-events:none}
+.offline-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1}
+.offline-feat{display:flex;align-items:flex-start;gap:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.offline-feat-icon{width:32px;height:32px;background:rgba(76,175,80,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.sync-visual{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px}
+.sync-step{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.sync-step:last-child{border-bottom:none}
+.sync-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+
+/* QR */
+.qr-section{padding:100px 40px;background:var(--green-light);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.qr-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.phone-frame{background:var(--dark);border-radius:32px;padding:8px;width:180px;margin:0 auto}
+.phone-screen{background:var(--cream);border-radius:26px;padding:16px;overflow:hidden}
+.phone-menu-item{background:#fff;border-radius:8px;padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:10px;border:1px solid var(--border)}
+
+/* PRICING */
+.pricing-section{padding:100px 40px;background:var(--cream)}
+.pricing-inner{max-width:1100px;margin:0 auto}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
+.pricing-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:36px 28px;position:relative;transition:all .3s}
+.pricing-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(26,58,28,0.1)}
+.pricing-card.featured{border:2px solid var(--green-accent);background:var(--green)}
+.pricing-popular{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--green-accent);color:var(--dark);padding:4px 16px;border-radius:100px;font-size:11px;font-weight:700;white-space:nowrap}
+.pricing-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:6px}
+.pricing-card.featured .pricing-name{color:#fff}
+.pricing-price{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;color:var(--dark);margin:16px 0 4px}
+.pricing-card.featured .pricing-price{color:#fff}
+.pricing-period{font-size:13px;color:var(--muted);margin-bottom:24px}
+.pricing-card.featured .pricing-period{color:rgba(255,255,255,0.6)}
+.pricing-features{list-style:none;margin-bottom:32px}
+.pricing-features li{font-size:13px;color:var(--muted);padding:7px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-weight:300}
+.pricing-card.featured .pricing-features li{color:rgba(255,255,255,0.8);border-bottom-color:rgba(255,255,255,0.1)}
+.pricing-features li::before{content:'✓';color:var(--green-accent);font-weight:700;flex-shrink:0}
+.pricing-btn{display:block;text-align:center;padding:13px;border-radius:10px;font-size:14px;font-weight:500;text-decoration:none;transition:all .2s}
+.pricing-btn-outline{border:1.5px solid var(--green);color:var(--green)}
+.pricing-btn-outline:hover{background:var(--green-light)}
+.pricing-btn-solid{background:#fff;color:var(--green);font-weight:600}
+.pricing-btn-solid:hover{background:var(--green-light)}
+
+/* DEMO & CONTACT */
+.demo-section{padding:100px 40px;background:var(--dark);position:relative;overflow:hidden}
+.demo-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(76,175,80,0.1) 0%,transparent 60%);pointer-events:none}
+.demo-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:80px}
+.form-wrap{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:36px}
+.form-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:6px}
+.form-sub{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:28px;font-weight:300}
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;font-weight:500;color:rgba(255,255,255,0.6);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.05em}
+.form-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:11px 14px;color:#fff;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s}
+.form-input:focus{border-color:var(--green-accent)}
+.form-input::placeholder{color:rgba(255,255,255,0.3)}
+.form-select{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:11px 14px;color:#fff;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;-webkit-appearance:none}
+.form-select option{background:#1a3a1c;color:#fff}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.submit-btn{width:100%;background:var(--green-accent);color:var(--dark);border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;margin-top:8px}
+.submit-btn:hover{background:#43a047;transform:translateY(-1px)}
+.demo-info-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:16px;line-height:1.2}
+.demo-info-sub{font-size:15px;color:rgba(255,255,255,0.6);line-height:1.7;font-weight:300;margin-bottom:36px}
+.demo-perks{display:flex;flex-direction:column;gap:14px}
+.demo-perk{display:flex;align-items:flex-start;gap:14px;padding:14px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid rgba(255,255,255,0.07)}
+.demo-perk-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+
+/* MENU URL SECTION */
+.menu-url-section{padding:60px 40px;background:#fff;border-top:1px solid var(--border)}
+.menu-url-inner{max-width:700px;margin:0 auto;text-align:center}
+.menu-url-box{background:var(--green-light);border:1.5px dashed var(--green-accent);border-radius:14px;padding:24px 32px;margin-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.menu-url-label{font-size:12px;color:var(--muted);font-weight:300;margin-bottom:4px}
+.menu-url-link{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--green)}
+.copy-btn{background:var(--green);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-size:13px;cursor:pointer;transition:background .2s;font-family:'DM Sans',sans-serif}
+.copy-btn:hover{background:var(--green-mid)}
+
+/* CTA */
+.cta-section{padding:100px 40px;text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,var(--green-light) 0%,transparent 70%);pointer-events:none}
+.cta-inner{max-width:700px;margin:0 auto;position:relative;z-index:1}
+
+/* FOOTER */
+footer{background:var(--dark);color:rgba(255,255,255,0.6);padding:60px 40px 40px;text-align:center}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:24px;color:#fff;margin-bottom:12px}
+.footer-logo span{color:var(--green-accent)}
+.footer-links{display:flex;gap:28px;justify-content:center;margin:24px 0;flex-wrap:wrap}
+.footer-links a{color:rgba(255,255,255,0.5);text-decoration:none;font-size:13px;transition:color .2s}
+.footer-links a:hover{color:#fff}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.3);margin-top:32px;border-top:1px solid rgba(255,255,255,0.08);padding-top:24px}
+
+/* TOAST */
+.toast{position:fixed;bottom:32px;right:32px;background:var(--green);color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s}
+.toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:900px){
+  nav{padding:14px 20px}
+  .nav-links{display:none}
+  .hero{padding:100px 20px 60px}
+  .hero-inner,.offline-inner,.qr-inner,.demo-inner{grid-template-columns:1fr;gap:40px}
+  .hero-visual{display:none}
+  .section{padding:60px 20px}
+  .offline-section,.qr-section,.cta-section,.demo-section,.pricing-section,.menu-url-section,.workflow-section{padding:60px 20px}
+  .pricing-grid,.flow-content{grid-template-columns:1fr}
+  .form-grid-2{grid-template-columns:1fr}
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero-inner>*{animation:fadeUp .6s ease both}
+.hero-inner>*:nth-child(2){animation-delay:.15s}
+</style>
+<style>
+.vorpet-nav{display:none;position:fixed;top:0;left:0;right:0;z-index:9999;height:52px;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:space-between;padding:0 40px;border-bottom:1px solid rgba(255,255,255,0.08);font-family:'DM Sans',sans-serif}
+.vorpet-logo{font-weight:800;font-size:16px;color:#fff;text-decoration:none;letter-spacing:-0.3px}
+.vorpet-logo span{color:#f59e0b}
+.vorpet-back{font-size:12px;color:rgba(255,255,255,0.5);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .2s}
+.vorpet-back:hover{color:#fff}
+.vorpet-launch{background:#4caf50;color:#fff;padding:8px 20px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;display:flex;align-items:center;gap:6px}
+.vorpet-launch:hover{background:#43a047;transform:translateY(-1px)}
+</style>
+
+<style>
+@media(max-width:900px){
+  .bhorpet-nav{padding:0 16px!important}
+  body{padding-top:52px}
+  .grid-2,.grid-3{grid-template-columns:1fr!important}
+  section{padding:48px 20px!important}
+}
+</style>
+</head>
+<body>
+<nav class="vorpet-nav">
+  <div style="display:flex;align-items:center;gap:20px">
+    <a href="../index.html" class="vorpet-logo" style="display:flex;align-items:center;gap:8px;text-decoration:none">
+      <div style="width:30px;height:30px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="22" height="20" viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 13 Q13 7 16 2" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M26 11 Q23 4 26 0" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M36 13 Q33 7 36 2" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><ellipse cx="26" cy="18" rx="20" ry="5" fill="#f59e0b"/><path d="M10 16 Q16 11 21 16 Q26 21 31 16 Q36 11 42 16" stroke="#111" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M6 18 Q6 40 26 40 Q46 40 46 18Z" fill="#f59e0b"/><path d="M11 23 Q10 33 13 38" stroke="#fde68a" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/></svg>
+      </div>
+      <span style="font-family:serif;font-weight:800;font-size:16px;color:#fff">Vor<span style="color:#f59e0b">pet</span></span>
+    </a>
+    <a href="../index.html" class="vorpet-back">← All Products</a>
+  </div>
+  <a href="https://currycloud.mooo.com" target="_blank" class="vorpet-launch">🚀 Launch App →</a>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Curry<span>Cloud</span></a>
+  <div class="nav-links">
+    <a href="#workflow">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#demo">Get Demo</a>
+  </div>
+  <a href="https://currycloud.mooo.com" class="nav-cta" target="_blank">Launch App →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div>
+      <!-- Paperless announcement bar -->
+      <a href="#paperless" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(16,185,129,0.08));border:1px solid rgba(34,197,94,0.3);border-radius:100px;padding:6px 16px 6px 8px;text-decoration:none;margin-bottom:20px;transition:all .2s;backdrop-filter:blur(8px)" onmouseover="this.style.borderColor='rgba(34,197,94,0.6)'" onmouseout="this.style.borderColor='rgba(34,197,94,0.3)'">
+        <span style="background:var(--green-accent);color:#fff;border-radius:100px;padding:2px 10px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase">New</span>
+        <span style="font-size:13px;color:var(--green);font-weight:500">🌿 Go paperless — WhatsApp bills, zero paper cost</span>
+        <span style="font-size:13px;color:var(--green);opacity:.7">→</span>
+      </a>
+      <div class="hero-tag">Restaurant Management Platform</div>
+      <h1>Run your restaurant <em>smarter</em>, even offline</h1>
+      <p class="hero-sub">CurryCloud is a complete restaurant management suite — POS, billing, kitchen display, QR menu, waiter ordering, CRM, inventory management, and multi-branch stock control. Go paperless with WhatsApp bills. Works even when internet doesn't.</p>
+      <div class="hero-btns">
+        <a href="https://currycloud.mooo.com" target="_blank" class="btn-primary">Launch App →</a>
+        <a href="#demo" class="btn-outline">Schedule Demo</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Offline capable</div></div>
+        <div class="stat"><div class="stat-num">&lt; 1s</div><div class="stat-label">Bill generation</div></div>
+        <div class="stat"><div class="stat-num">Auto</div><div class="stat-label">Cloud sync</div></div>
+        <div class="stat"><div class="stat-num">Multi</div><div class="stat-label">Branch support</div></div>
+      </div>
+
+    </div>
+    <div class="hero-visual">
+      <div style="position:relative">
+        <div class="offline-pill">📴 Offline Mode Active</div>
+        <div class="dashboard-mockup">
+          <div class="mockup-bar">
+            <div class="mockup-dot" style="background:#ff5f57"></div>
+            <div class="mockup-dot" style="background:#ffbd2e"></div>
+            <div class="mockup-dot" style="background:#28ca41"></div>
+            <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:var(--text);margin-left:8px">CurryCloud POS</div>
+          </div>
+          <div class="mockup-grid">
+            <div class="mockup-card"><div class="mockup-card-label">Revenue</div><div class="mockup-card-val">₹12,480</div><div class="mockup-card-change">↑ 14%</div></div>
+            <div class="mockup-card"><div class="mockup-card-label">Orders</div><div class="mockup-card-val">47</div><div class="mockup-card-change">↑ 8</div></div>
+            <div class="mockup-card"><div class="mockup-card-label">Avg Bill</div><div class="mockup-card-val">₹265</div><div class="mockup-card-change">↑ ₹22</div></div>
+          </div>
+          <div style="font-size:9px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Running Orders</div>
+          <div class="mockup-order"><div><div style="font-size:11px;font-weight:600;color:var(--dark)">#000042 · T-5 · Dine In</div><div style="font-size:9px;color:var(--muted)">Butter Paneer, Zinger Burger × 2</div></div><div class="mockup-badge badge-kot">KOT Sent</div></div>
+          <div class="mockup-order"><div><div style="font-size:11px;font-weight:600;color:var(--dark)">#000041 · Take Away</div><div style="font-size:9px;color:var(--muted)">Masala Dosa, Filter Coffee</div></div><div class="mockup-badge badge-billed">Billed ✓</div></div>
+          <div class="mockup-order" style="background:#fff3f3"><div><div style="font-size:11px;font-weight:600;color:var(--dark)">OFFLINE-1234 · T-8</div><div style="font-size:9px;color:var(--muted)">Classic Burger × 2</div></div><div class="mockup-badge badge-draft">📴 Offline</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW VIDEO SECTION -->
+<section class="workflow-section" id="workflow">
+  <div class="workflow-inner">
+    <div class="workflow-header">
+      <div class="section-tag" style="color:var(--green-accent);text-align:center">Live Software Flow</div>
+      <h2 class="workflow-title">See CurryCloud in action</h2>
+      <p class="workflow-sub">From table selection to bill generation — watch the complete sales workflow</p>
+    </div>
+    <div class="flow-demo">
+      <div class="flow-steps-nav" id="stepsNav"></div>
+      <div id="flowScreens"></div>
+      <div class="flow-nav-btns">
+        <button class="flow-nav-btn" onclick="prevStep()">← Previous</button>
+        <span id="stepCounter" style="font-size:13px;color:rgba(255,255,255,0.4);display:flex;align-items:center"></span>
+        <button class="flow-nav-btn primary" onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div>
+    <div class="section-tag">Everything you need</div>
+    <h2 class="section-title">Built for real restaurants,<br>not demos</h2>
+    <p class="section-sub">Every feature is designed around how restaurants actually work — fast, chaotic, and always busy.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon">🧾</div><div class="feature-title">Smart POS & Billing</div><div class="feature-desc">Generate bills instantly. Round-off handling, SGST/CGST, table surcharge, promo codes, split payments, UPI, card, and cash — all in one screen.</div><div class="feature-tag">✓ Auto round-off</div></div>
+    <div class="feature-card"><div class="feature-icon">📴</div><div class="feature-title">Offline Mode</div><div class="feature-desc">Internet down? No problem. Take orders, add items, generate bills, and accept Cash or UPI. Everything auto-syncs when connectivity returns.</div><div class="feature-tag">✓ Auto-sync on reconnect</div></div>
+    <div class="feature-card"><div class="feature-icon">📱</div><div class="feature-title">Waiter Mobile Ordering</div><div class="feature-desc">Waiters take orders directly on their mobile or tablet — walk to the table, select items, add to order. No paper, no delay, no miscommunication.</div><div class="feature-tag">✓ Any device</div></div>
+    <div class="feature-card"><div class="feature-icon">🍳</div><div class="feature-title">Kitchen Display System</div><div class="feature-desc">Send KOTs to kitchen instantly. Track cooking status — open, in-process, ready. Kitchen staff updates in real time from any device.</div><div class="feature-tag">✓ Real-time KOT</div></div>
+    <div class="feature-card"><div class="feature-icon">📱</div><div class="feature-title">QR Menu Scanner</div><div class="feature-desc">Generate QR codes for each table. Customers scan and browse your menu — beautiful, fast, no app download needed. Veg/non-veg indicators.</div><div class="feature-tag">✓ No app required</div></div>
+    <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title">Table Surcharge</div><div class="feature-desc">Set surcharges per table or per cover. Premium tables, private rooms, outdoor seating — automatically applied when the table is selected.</div><div class="feature-tag">✓ Per-table or per-cover</div></div>
+    <div class="feature-card"><div class="feature-icon">🏷️</div><div class="feature-title">Promo Codes & Discounts</div><div class="feature-desc">Create promo codes with percentage or flat discounts, usage limits, and expiry dates. Customers redeem at billing — applied instantly.</div><div class="feature-tag">✓ Usage limits & expiry</div></div>
+    <div class="feature-card"><div class="feature-icon">🥡</div><div class="feature-title">Take Away & Delivery</div><div class="feature-desc">Support for Dine In, Take Away, and Delivery order types. Each with its own workflow, status tracking, and delivery agent assignment.</div><div class="feature-tag">✓ 3 order types</div></div>
+    <div class="feature-card"><div class="feature-icon">📊</div><div class="feature-title">Sales Reports</div><div class="feature-desc">Daily, weekly, monthly breakdowns. Revenue by payment method, average bill, top items, and full GST summaries ready for filing.</div><div class="feature-tag">✓ GST-ready</div></div>
+    <div class="feature-card"><div class="feature-icon">👥</div><div class="feature-title">CRM & Customer Loyalty</div><div class="feature-desc">Build your customer database. Track visit history, total spend, and send WhatsApp bills and Razorpay payment links automatically.</div><div class="feature-tag">✓ WhatsApp bills</div></div>
+    <div class="feature-card"><div class="feature-icon">🏢</div><div class="feature-title">Multi-Branch Management</div><div class="feature-desc">Manage multiple branches from one account. Each branch has its own staff, menu, tables, and reports with central admin oversight.</div><div class="feature-tag">✓ Unlimited branches</div></div>
+    <div class="feature-card"><div class="feature-icon">🔐</div><div class="feature-title">Role-Based Access Control</div><div class="feature-desc">Super Admin, Admin, Waiter, User — give each staff member exactly the access they need. Full menu-level permission control per role.</div><div class="feature-tag">✓ Granular permissions</div></div>
+    <div class="feature-card"><div class="feature-icon">💰</div><div class="feature-title">Merchant Card Payment</div><div class="feature-desc">Accept card payments via Razorpay. Send a WhatsApp payment link to the customer's phone — they pay by UPI, card, or netbanking and bill auto-generates.</div><div class="feature-tag">✓ WhatsApp payment link</div></div>
+    <div class="feature-card" style="border-color:rgba(76,175,80,0.4);background:linear-gradient(145deg,#fff,#f0fdf4)"><div class="feature-icon" style="background:#dcfce7">📦</div><div class="feature-title">Inventory Management</div><div class="feature-desc">Complete ingredient tracking from purchase to plate. Auto-deducts stock on every bill using linked recipes. Works across multiple nodes and branches.</div><div class="feature-tag">✓ Auto-deduction on billing</div></div>
+    <div class="feature-card" style="border-color:rgba(76,175,80,0.4);background:linear-gradient(145deg,#fff,#f0fdf4)"><div class="feature-icon" style="background:#dcfce7">🤖</div><div class="feature-title">AI Purchase Suggestions</div><div class="feature-desc">Smart PO suggestions based on 30-day consumption averages, weather rules (hot days → more drinks), and special occasion multipliers. One-click apply to PO.</div><div class="feature-tag">✓ Weather & occasion rules</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- INVENTORY SHOWCASE — each feature one by one                       -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div id="inventory" style="background:var(--dark);padding:0 0 0 0;overflow:hidden">
+
+  <!-- Header -->
+  <div style="text-align:center;padding:90px 40px 60px;position:relative">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(76,175,80,0.10) 0%,transparent 65%);pointer-events:none"></div>
+    <div style="position:relative;z-index:1">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(76,175,80,0.12);border:1px solid rgba(76,175,80,0.3);border-radius:100px;padding:6px 18px;font-size:11px;font-weight:700;color:var(--green-accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px">📦 Inventory Management</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(30px,4.5vw,52px);font-weight:800;color:#fff;line-height:1.1;margin-bottom:18px">Every ingredient tracked.<br><span style="color:var(--green-accent)">Every rupee accounted for.</span></h2>
+      <p style="font-size:16px;color:rgba(255,255,255,0.5);max-width:560px;margin:0 auto;line-height:1.75;font-weight:300">From purchase order to plate — CurryCloud tracks every ingredient at every branch. Stock auto-deducts the moment a bill is generated, online or offline.</p>
+    </div>
+  </div>
+
+  <!-- FEATURE 1 — AI Smart PO -->
+  <div style="padding:0 40px 80px;max-width:1200px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:100px">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--green-accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px">Feature 01 — Smart Purchase Orders</div>
+        <h3 style="font-family:'Syne',sans-serif;font-size:clamp(24px,3vw,36px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:16px">AI suggests <span style="color:var(--green-accent)">how much to buy</span> — before you even ask</h3>
+        <p style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.8;margin-bottom:28px;font-weight:300">CurryCloud analyses your last 30 days of consumption, checks tomorrow's weather forecast, and applies occasion rules — then suggests the exact quantity to order. One click applies it to your PO.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>30-day consumption average as base quantity</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Weather rules — Hot 41°C day? ×1.3 multiplier on drinks</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Occasion rules — Weekends, festivals, special days</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Accept & Apply to PO with one click</div>
+        </div>
+      </div>
+      <!-- Smart PO Mockup -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px">
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px">🤖 Smart PO — AI Suggestions</div>
+        <!-- Weather banner -->
+        <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:20px">🌡️</span>
+            <div><div style="font-size:12px;font-weight:600;color:#fff">Tomorrow's forecast · 2026-05-19</div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px">41.3°C · Rain 0% · Humidity 33%</div></div>
+          </div>
+          <div style="font-size:10px;font-weight:600;color:#fbbf24;background:rgba(245,158,11,0.15);border-radius:6px;padding:4px 10px">🔥 Hot rules active</div>
+        </div>
+        <!-- Table -->
+        <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08)">
+          <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.9fr 1fr;gap:0;background:rgba(255,255,255,0.05);padding:8px 14px;font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.06em">
+            <span>Item</span><span>30D Avg</span><span>Normal</span><span>Weather</span><span>Suggested</span><span>Reason</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.9fr 1fr;gap:0;padding:10px 14px;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.05);align-items:center">
+            <span style="color:#fff;font-weight:500">Onion</span>
+            <span style="color:rgba(255,255,255,0.5)">29.00</span>
+            <span style="color:rgba(255,255,255,0.5)">36.00</span>
+            <span style="color:#fbbf24;font-weight:600">×1.3</span>
+            <span style="color:var(--green-accent);font-weight:700;font-size:13px">38.00</span>
+            <span style="color:rgba(255,255,255,0.4);font-size:10px">Hot 41°C (×1.3)</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.9fr 1fr;gap:0;padding:10px 14px;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.05);align-items:center">
+            <span style="color:#fff;font-weight:500">Milk</span>
+            <span style="color:rgba(255,255,255,0.5)">17.00</span>
+            <span style="color:rgba(255,255,255,0.5)">18.00</span>
+            <span style="color:rgba(255,255,255,0.35)">×1</span>
+            <span style="color:var(--green-accent);font-weight:700;font-size:13px">17.00</span>
+            <span style="color:rgba(255,255,255,0.4);font-size:10px">Normal conditions</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.9fr 1fr;gap:0;padding:10px 14px;font-size:11px;align-items:center">
+            <span style="color:#fff;font-weight:500">Eggs</span>
+            <span style="color:rgba(255,255,255,0.5)">38.00</span>
+            <span style="color:rgba(255,255,255,0.5)">38.00</span>
+            <span style="color:rgba(255,255,255,0.35)">×1</span>
+            <span style="color:var(--green-accent);font-weight:700;font-size:13px">38.00</span>
+            <span style="color:rgba(255,255,255,0.4);font-size:10px">Normal conditions</span>
+          </div>
+        </div>
+        <button style="width:100%;margin-top:14px;background:var(--green-accent);border:none;border-radius:8px;padding:11px;font-size:12px;font-weight:700;color:var(--dark);cursor:pointer">✅ Accept & Apply to PO</button>
+      </div>
+    </div>
+
+    <!-- FEATURE 2 — PO + GRN + WhatsApp -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:100px">
+      <!-- WhatsApp mockup LEFT -->
+      <div style="background:#e5ddd5;border-radius:20px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,0.4)">
+        <div style="background:#075e54;border-radius:12px 12px 0 0;padding:10px 14px;display:flex;align-items:center;gap:10px;margin:-20px -20px 16px">
+          <div style="width:32px;height:32px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px">🧑</div>
+          <div><div style="font-size:12px;font-weight:600;color:#fff">FF Foods Supplier</div><div style="font-size:10px;color:rgba(255,255,255,0.6)">WhatsApp Business</div></div>
+        </div>
+        <!-- PO message -->
+        <div style="background:#fff;border-radius:10px;padding:13px;font-size:10px;line-height:1.85;color:#333;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+          <div style="font-weight:700;color:#075e54;margin-bottom:5px">📋 Purchase Order: PO-794794</div>
+          <div>From: Khana Junction Main Branch</div>
+          <div>Date: <strong style="color:#1a3a1c">2026-05-17</strong></div>
+          <div>Deliver To: 🏭 Main Warehouse</div>
+          <div>Expected: <strong style="color:#1a3a1c">2026-05-17</strong></div>
+          <div style="margin-top:7px;padding-top:7px;border-top:1px dashed #ddd"><strong>Items:</strong><br>• Maida: 50.000 kg @ ₹40.00/kg</div>
+          <div style="margin-top:6px;font-weight:700;color:#1a3a1c;font-size:11px">Total: ₹2,000.00</div>
+          <div style="font-size:9px;color:#888;margin-top:4px">Please confirm receipt of this PO.</div>
+          <div style="text-align:right;font-size:9px;color:#aaa;margin-top:4px">2:55 PM ✓✓</div>
+        </div>
+        <!-- GRN message -->
+        <div style="background:#dcf8c6;border-radius:10px;padding:13px;font-size:10px;line-height:1.85;color:#333;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+          <div style="font-weight:700;color:#075e54;margin-bottom:5px">📥 GRN Receipt: GRN-969141</div>
+          <div>From: Khana Junction Main Branch</div>
+          <div>Date: <strong style="color:#1a3a1c">2026-05-17</strong></div>
+          <div>Received At: 🏭 Main Warehouse</div>
+          <div>Invoice#: FF007IN</div>
+          <div style="margin-top:7px;padding-top:7px;border-top:1px dashed #cde8b0"><strong>Items Received:</strong><br>• Maida: 50.000 kg @ ₹40.00/kg</div>
+          <div style="margin-top:6px;font-weight:700;color:#1a3a1c;font-size:11px">Total: ₹2,000.00</div>
+          <div style="font-size:9px;color:#888;margin-top:4px">Thank you for the delivery.</div>
+          <div style="text-align:right;font-size:9px;color:#aaa;margin-top:4px">2:57 PM ✓✓</div>
+        </div>
+      </div>
+      <!-- Text RIGHT -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--green-accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px">Feature 02 — Purchase Orders & GRN</div>
+        <h3 style="font-family:'Syne',sans-serif;font-size:clamp(24px,3vw,36px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:16px">Order from supplier. <span style="color:var(--green-accent)">WhatsApp confirms it.</span></h3>
+        <p style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.8;margin-bottom:28px;font-weight:300">Create a Purchase Order and your supplier gets a WhatsApp notification instantly. When goods arrive, receive them via GRN — stock lands directly into the warehouse or branch node with full invoice trail.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>WhatsApp PO notification auto-sent to supplier</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>GRN receipt confirmation sent to supplier</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Stock added to correct node (WH, CK, or Branch)</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Invoice number linked for full audit trail</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE 3 — Stock Ledger Flow -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:100px">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--green-accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px">Feature 03 — Stock Ledger & Flow</div>
+        <h3 style="font-family:'Syne',sans-serif;font-size:clamp(24px,3vw,36px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:16px">See exactly <span style="color:var(--green-accent)">where every gram went</span></h3>
+        <p style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.8;margin-bottom:28px;font-weight:300">Every movement — GRN in, transfers out, consumption from billing, waste — recorded in a live ledger with running balance. The Flow view shows a beautiful Sankey diagram of exactly how stock moved.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>GRN In, Transfer Out, Consumption, Waste — all tracked</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Running balance with date-range filter</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Flow diagram — visual Sankey of stock movement</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Filter by branch/node, category, item, and date</div>
+        </div>
+      </div>
+      <!-- Stock Ledger Flow Mockup -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:24px">
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">📊 Stock Ledger — Chicken (Boneless)</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:16px">Khana Junction Main Branch · 11 transactions</div>
+        <!-- Summary cards -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px">
+          <div style="background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:16px;font-weight:800;color:var(--green-accent)">30.00</div><div style="font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px">Total In</div></div>
+          <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:16px;font-weight:800;color:#f87171">11.18</div><div style="font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px">Total Out</div></div>
+          <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:16px;font-weight:800;color:#fbbf24">0.00</div><div style="font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px">Waste</div></div>
+          <div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:16px;font-weight:800;color:#93c5fd">11</div><div style="font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px">Txns</div></div>
+        </div>
+        <!-- Sankey flow diagram SVG -->
+        <div style="background:rgba(255,255,255,0.02);border-radius:12px;padding:16px;text-align:center">
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:12px;text-align:left">Stock flow diagram</div>
+          <svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px">
+            <!-- GRN In box -->
+            <rect x="4" y="20" width="90" height="36" rx="8" fill="rgba(76,175,80,0.2)" stroke="rgba(76,175,80,0.5)" stroke-width="1"/>
+            <text x="49" y="36" text-anchor="middle" font-size="9" fill="#86efac" font-weight="700">📦 GRN In</text>
+            <text x="49" y="49" text-anchor="middle" font-size="10" fill="#4ade80" font-weight="800">+30.00</text>
+            <!-- Audit box -->
+            <rect x="4" y="70" width="90" height="36" rx="8" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="49" y="86" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.5)" font-weight="700">📋 Audit Adj</text>
+            <text x="49" y="99" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.4)" font-weight="800">+0.00</text>
+            <!-- Flow paths from left to center -->
+            <path d="M94 38 C140 38 140 88 180 88" stroke="rgba(76,175,80,0.4)" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M94 88 C140 88 140 88 180 88" stroke="rgba(255,255,255,0.08)" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <!-- Center node -->
+            <rect x="164" y="68" width="92" height="40" rx="10" fill="#1a3a1c" stroke="rgba(76,175,80,0.6)" stroke-width="1.5"/>
+            <text x="210" y="85" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">Chicken (Boneless)</text>
+            <text x="210" y="98" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.4)">Main Warehouse</text>
+            <!-- Right flows -->
+            <path d="M256 80 C295 80 295 35 330 35" stroke="rgba(245,158,11,0.5)" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <path d="M256 88 C295 88 295 110 330 110" stroke="rgba(147,92,232,0.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M256 92 C295 92 295 140 330 140" stroke="rgba(76,175,80,0.5)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <!-- Transfer Out -->
+            <rect x="330" y="16" width="86" height="36" rx="8" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.4)" stroke-width="1"/>
+            <text x="373" y="31" text-anchor="middle" font-size="9" fill="#fbbf24" font-weight="700">🔄 Transfer Out</text>
+            <text x="373" y="44" text-anchor="middle" font-size="10" fill="#f59e0b" font-weight="800">-10.00</text>
+            <!-- Consumption -->
+            <rect x="330" y="92" width="86" height="36" rx="8" fill="rgba(147,92,232,0.12)" stroke="rgba(147,92,232,0.35)" stroke-width="1"/>
+            <text x="373" y="107" text-anchor="middle" font-size="9" fill="#c4b5fd" font-weight="700">🍽 Consumption</text>
+            <text x="373" y="120" text-anchor="middle" font-size="10" fill="#a78bfa" font-weight="800">-1.18</text>
+            <!-- Remaining -->
+            <rect x="330" y="122" width="86" height="36" rx="8" fill="rgba(76,175,80,0.15)" stroke="rgba(76,175,80,0.4)" stroke-width="1"/>
+            <text x="373" y="137" text-anchor="middle" font-size="9" fill="#86efac" font-weight="700">✅ Remaining</text>
+            <text x="373" y="150" text-anchor="middle" font-size="11" fill="#4ade80" font-weight="800">18.82</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE 4 — Auto Deduction on Billing -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:100px">
+      <!-- Deduction Mockup LEFT -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:24px">
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px">⚡ Auto-Deduction — Order #000106 Billed</div>
+        <!-- Recipe card -->
+        <div style="background:rgba(76,175,80,0.06);border:1px solid rgba(76,175,80,0.15);border-radius:10px;padding:12px 14px;margin-bottom:16px">
+          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:8px">📖 Recipe: Egg Role → 3 ingredients deducted</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);border-radius:7px;padding:8px 12px">
+              <div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px">🥚</span><span style="font-size:12px;color:#fff;font-weight:500">Eggs</span></div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="font-size:11px;color:rgba(255,255,255,0.35)">20.000</span>
+                <span style="font-size:11px;color:#f87171;font-weight:600">−2.000</span>
+                <span style="font-size:13px;font-weight:800;color:var(--green-accent)">18.000</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);border-radius:7px;padding:8px 12px">
+              <div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px">🌾</span><span style="font-size:12px;color:#fff;font-weight:500">Maida</span></div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="font-size:11px;color:rgba(255,255,255,0.35)">20.000</span>
+                <span style="font-size:11px;color:#f87171;font-weight:600">−0.050</span>
+                <span style="font-size:13px;font-weight:800;color:var(--green-accent)">19.950</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);border-radius:7px;padding:8px 12px">
+              <div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px">🫙</span><span style="font-size:12px;color:#fff;font-weight:500">Sunflower Oil</span></div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="font-size:11px;color:rgba(255,255,255,0.35)">2.000</span>
+                <span style="font-size:11px;color:#f87171;font-weight:600">−0.020</span>
+                <span style="font-size:13px;font-weight:800;color:var(--green-accent)">1.980</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Node mapping -->
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px">
+          <span style="font-size:20px">🏪</span>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:600;color:#fff">Khana Junction Dharmatala</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px">Deducted from: node_id=3 · Branch stock only</div>
+          </div>
+          <div style="font-size:10px;font-weight:700;color:var(--green-accent);background:rgba(76,175,80,0.15);border-radius:6px;padding:4px 10px">✓ Correct node</div>
+        </div>
+        <div style="margin-top:12px;font-size:10px;color:rgba(255,255,255,0.3);text-align:center">Works online and offline — deduction syncs on reconnect</div>
+      </div>
+      <!-- Text RIGHT -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--green-accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px">Feature 04 — Auto Inventory Deduction</div>
+        <h3 style="font-family:'Syne',sans-serif;font-size:clamp(24px,3vw,36px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:16px">Bill generated. <span style="color:var(--green-accent)">Stock auto-deducted.</span> Zero effort.</h3>
+        <p style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.8;margin-bottom:28px;font-weight:300">Link a recipe to each menu item. The moment a bill is generated, CurryCloud looks up the recipe, calculates ingredient quantities, and deducts from the correct branch's stock node — automatically. Even works offline and syncs when back online.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Recipe-based deduction — per ingredient, per qty</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Branch-to-node mapping — each branch deducts its own stock</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Works offline — syncs deduction when internet returns</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,0.7)"><div style="width:20px;height:20px;background:rgba(76,175,80,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green-accent);flex-shrink:0">✓</div>Consumption record with order reference logged</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE 5 — Multi-Node & Branch Stock -->
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:40px">
+      <div style="text-align:center;margin-bottom:40px">
+        <div style="font-size:11px;font-weight:700;color:var(--green-accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">Feature 05 — Multi-Node Stock Control</div>
+        <h3 style="font-family:'Syne',sans-serif;font-size:clamp(22px,3vw,34px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:12px">One account. Multiple locations.<br><span style="color:var(--green-accent)">Each with its own stock.</span></h3>
+        <p style="font-size:14px;color:rgba(255,255,255,0.5);max-width:540px;margin:0 auto;line-height:1.75;font-weight:300">Warehouse, Cloud Kitchen, and each Branch all hold separate inventory. Transfers move stock between nodes. Each branch bills from its own assigned stock node.</p>
+      </div>
+      <!-- Node diagram -->
+      <div style="display:flex;align-items:flex-start;justify-content:center;gap:16px;flex-wrap:wrap">
+        <!-- Main Warehouse -->
+        <div style="background:rgba(76,175,80,0.1);border:2px solid rgba(76,175,80,0.35);border-radius:16px;padding:20px;min-width:180px;text-align:center">
+          <div style="font-size:28px;margin-bottom:8px">🏭</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">Main Warehouse</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:3px">node_id = 1</div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05);border-radius:5px;padding:3px 8px">Chicken: 18.975 kg</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05);border-radius:5px;padding:3px 8px">Basmati Rice: 17.4 kg</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05);border-radius:5px;padding:3px 8px">Eggs: 100 pcs</div>
+          </div>
+        </div>
+        <!-- Arrow -->
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding-top:40px">
+          <div style="font-size:12px;color:var(--green-accent);font-weight:700">Transfer →</div>
+          <div style="width:60px;height:2px;background:linear-gradient(90deg,rgba(76,175,80,0.5),rgba(76,175,80,0.1))"></div>
+        </div>
+        <!-- Cloud Kitchen -->
+        <div style="background:rgba(59,130,246,0.1);border:2px solid rgba(59,130,246,0.3);border-radius:16px;padding:20px;min-width:180px;text-align:center">
+          <div style="font-size:28px;margin-bottom:8px">☁️</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">Cloud Kitchen</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:3px">node_id = 2</div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05);border-radius:5px;padding:3px 8px">Paneer: 20 kg</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05);border-radius:5px;padding:3px 8px">Oil: 5 L</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05);border-radius:5px;padding:3px 8px">Salt: 10 kg</div>
+          </div>
+        </div>
+        <!-- Arrow -->
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding-top:40px">
+          <div style="font-size:12px;color:var(--green-accent);font-weight:700">Transfer →</div>
+          <div style="width:60px;height:2px;background:linear-gradient(90deg,rgba(76,175,80,0.5),rgba(76,175,80,0.1))"></div>
+        </div>
+        <!-- Dharmatala Branch -->
+        <div style="background:rgba(245,158,11,0.1);border:2px solid rgba(245,158,11,0.3);border-radius:16px;padding:20px;min-width:180px;text-align:center">
+          <div style="font-size:28px;margin-bottom:8px">🏪</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">Dharmatala Branch</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:3px">node_id = 3</div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05);border-radius:5px;padding:3px 8px">Eggs: 16 pcs ↓ billed</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05);border-radius:5px;padding:3px 8px">Maida: 19.9 kg</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.05);border-radius:5px;padding:3px 8px">Oil: 1.96 L</div>
+          </div>
+          <div style="margin-top:10px;font-size:10px;color:var(--green-accent);font-weight:600">⚡ Bills deduct here</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="offline-section" id="offline">
+  <div class="offline-inner">
+    <div>
+      <div class="section-tag" style="color:var(--green-accent)">Offline-First Technology</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;color:#fff;margin-bottom:20px;line-height:1.15">Never lose a sale because of <span style="color:var(--green-accent)">bad internet</span></h2>
+      <p style="font-size:15px;color:rgba(255,255,255,0.6);line-height:1.7;font-weight:300;margin-bottom:32px">Most POS systems crash when the internet goes down. CurryCloud was built offline-first — your restaurant keeps running no matter what.</p>
+      <div class="offline-feat"><div class="offline-feat-icon">📦</div><div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">Cached menu & tables</div><div style="font-size:12px;color:rgba(255,255,255,0.5);font-weight:300">All menu items, categories, and tables cached locally.</div></div></div>
+      <div class="offline-feat"><div class="offline-feat-icon">🧾</div><div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">Full billing offline</div><div style="font-size:12px;color:rgba(255,255,255,0.5);font-weight:300">SGST, CGST, surcharge, discount, round-off — all offline.</div></div></div>
+      <div class="offline-feat"><div class="offline-feat-icon">🔄</div><div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">Smart auto-sync</div><div style="font-size:12px;color:rgba(255,255,255,0.5);font-weight:300">Orders, bills, and items sync automatically when back online.</div></div></div>
+      <div class="offline-feat"><div class="offline-feat-icon">📊</div><div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">Sync progress counter</div><div style="font-size:12px;color:rgba(255,255,255,0.5);font-weight:300">Real-time progress bar showing how many orders remain.</div></div></div>
+    </div>
+    <div class="sync-visual">
+      <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:20px;font-family:'Syne',sans-serif">How sync works</div>
+      <div class="sync-step"><div class="sync-num" style="background:rgba(220,38,38,0.2);color:#f87171">1</div><div style="font-size:12px;color:rgba(255,255,255,0.7)"><strong style="color:#fff">Internet drops</strong> — Offline mode activates instantly. Red banner appears.</div></div>
+      <div class="sync-step"><div class="sync-num" style="background:rgba(220,38,38,0.2);color:#f87171">2</div><div style="font-size:12px;color:rgba(255,255,255,0.7)"><strong style="color:#fff">Orders continue</strong> — Create orders, add items, generate bills locally.</div></div>
+      <div class="sync-step"><div class="sync-num" style="background:rgba(220,38,38,0.2);color:#f87171">3</div><div style="font-size:12px;color:rgba(255,255,255,0.7)"><strong style="color:#fff">Print receipts</strong> — Offline bills print with all amounts, GST, payment details.</div></div>
+      <div class="sync-step"><div class="sync-num" style="background:rgba(245,158,11,0.2);color:#fbbf24">4</div><div style="font-size:12px;color:rgba(255,255,255,0.7)"><strong style="color:#fff">Internet returns</strong> — Sync starts automatically with progress bar.</div></div>
+      <div class="sync-step"><div class="sync-num" style="background:rgba(76,175,80,0.2);color:#86efac">5</div><div style="font-size:12px;color:rgba(255,255,255,0.7)"><strong style="color:#fff">All synced ✓</strong> — Orders, bills, and items appear in reports. Nothing lost.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAPERLESS SECTION -->
+<section id="paperless" style="padding:80px 40px;background:var(--green);position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(255,255,255,0.08) 0%,transparent 60%);pointer-events:none"></div>
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1">
+    <div>
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:600;color:#fff;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px">🌿 Eco Friendly</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;color:#fff;line-height:1.1;margin-bottom:16px">Go paperless.<br>Save trees. Save money.</h2>
+      <p style="font-size:16px;color:rgba(255,255,255,0.75);line-height:1.7;font-weight:300;max-width:460px;margin-bottom:32px">Every bill, every receipt — delivered instantly on WhatsApp. No thermal paper, no printer jams, no ink costs. Your customer gets a clean digital bill on their phone in seconds.</p>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.1);border-radius:12px;padding:14px 18px;border:1px solid rgba(255,255,255,0.15)">
+          <span style="font-size:22px">📱</span>
+          <div><div style="font-size:14px;font-weight:500;color:#fff">Instant WhatsApp delivery</div><div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px;font-weight:300">Bill reaches customer's phone the moment payment is done</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.1);border-radius:12px;padding:14px 18px;border:1px solid rgba(255,255,255,0.15)">
+          <span style="font-size:22px">🧾</span>
+          <div><div style="font-size:14px;font-weight:500;color:#fff">Full itemised digital bill</div><div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px;font-weight:300">Items, GST, surcharge, discount — all clearly listed</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.1);border-radius:12px;padding:14px 18px;border:1px solid rgba(255,255,255,0.15)">
+          <span style="font-size:22px">💰</span>
+          <div><div style="font-size:14px;font-weight:500;color:#fff">Zero paper & printer costs</div><div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px;font-weight:300">Save ₹3,000–₹8,000/year on thermal rolls and ink</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.1);border-radius:12px;padding:14px 18px;border:1px solid rgba(255,255,255,0.15)">
+          <span style="font-size:22px">🌱</span>
+          <div><div style="font-size:14px;font-weight:500;color:#fff">Better for the planet</div><div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px;font-weight:300">Thermal paper is non-recyclable. Going digital helps reduce waste.</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:20px">
+      <!-- WhatsApp bill mockup -->
+      <div style="background:#e5ddd5;border-radius:20px;padding:20px;width:280px;box-shadow:0 20px 60px rgba(0,0,0,0.2)">
+        <div style="background:#075e54;border-radius:12px 12px 0 0;padding:10px 14px;display:flex;align-items:center;gap:10px;margin:-20px -20px 16px">
+          <div style="width:34px;height:34px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px">🍽</div>
+          <div><div style="font-size:12px;font-weight:600;color:#fff">Your Restaurant</div><div style="font-size:10px;color:rgba(255,255,255,0.6)">Online</div></div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+          <div style="font-size:11px;font-weight:700;color:#075e54;margin-bottom:8px">🍽 Your Restaurant</div>
+          <div style="font-size:9px;color:#555;margin-bottom:6px;line-height:1.5">Hi <strong>Customer</strong>, your bill is ready!</div>
+          <div style="font-size:9px;color:#333;border-top:1px dashed #eee;padding-top:8px;margin-bottom:6px;line-height:1.8">
+            • Butter Paneer × 1 = ₹325<br>
+            • Classic Burger × 1 = ₹250<br>
+            • Filter Coffee × 2 = ₹160
+          </div>
+          <div style="font-size:9px;color:#555;border-top:1px dashed #eee;padding-top:6px;margin-bottom:8px;line-height:1.8">
+            Subtotal &nbsp;&nbsp;&nbsp; ₹735<br>
+            SGST 2.5% &nbsp;+₹18<br>
+            CGST 2.5% &nbsp;+₹18
+          </div>
+          <div style="font-size:12px;font-weight:700;color:#075e54;margin-bottom:8px">TOTAL &nbsp; ₹771</div>
+          <div style="background:#25d366;color:#fff;border-radius:8px;padding:7px;text-align:center;font-size:10px;font-weight:600">💳 Click to Pay (Razorpay)</div>
+          <div style="font-size:8px;color:#aaa;text-align:right;margin-top:6px">✓✓ Delivered instantly</div>
+        </div>
+        <div style="text-align:center;margin-top:12px">
+          <div style="font-size:10px;color:#555;font-weight:500">🌿 Paperless bill — no thermal paper needed</div>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:12px;padding:14px 20px;text-align:center;width:280px">
+        <div style="font-size:24px;font-weight:800;color:#fff;font-family:'Syne',sans-serif">₹6,000+</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.75);margin-top:4px;font-weight:300">saved per year on paper & printer costs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QR MENU SECTION -->
+<section class="qr-section" id="qrmenu">
+  <div class="qr-inner">
+    <div>
+      <div class="section-tag">Digital Menu</div>
+      <h2 class="section-title">QR menus your customers will love</h2>
+      <p class="section-sub">Generate QR codes for each table instantly. Customers scan and browse your full menu with photos, prices, and veg/non-veg indicators — no app download needed.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px">
+        <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:12px;padding:14px;border:1px solid var(--border)"><div style="width:32px;height:32px;background:var(--green-light);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">📋</div><div><div style="font-size:13px;font-weight:500;color:var(--dark)">One unique QR per table</div><div style="font-size:11px;color:var(--muted);font-weight:300">Each table gets its own QR code that links to your menu</div></div></div>
+        <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:12px;padding:14px;border:1px solid var(--border)"><div style="width:32px;height:32px;background:var(--green-light);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🖼️</div><div><div style="font-size:13px;font-weight:500;color:var(--dark)">Photos, prices & categories</div><div style="font-size:11px;color:var(--muted);font-weight:300">Beautiful menu with item images and category filters</div></div></div>
+        <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:12px;padding:14px;border:1px solid var(--border)"><div style="width:32px;height:32px;background:var(--green-light);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🟢</div><div><div style="font-size:13px;font-weight:500;color:var(--dark)">Veg / Non-veg indicators</div><div style="font-size:11px;color:var(--muted);font-weight:300">Clear green/red dots on every item for dietary preference</div></div></div>
+      </div>
+      <a href="https://currycloud.mooo.com/menu/1" target="_blank" class="btn-outline" id="menuBtn">View Live Sample Menu →</a>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:20px">
+      <div style="background:#fff;border-radius:20px;padding:28px;border:1px solid var(--border);box-shadow:0 20px 40px rgba(26,58,28,0.08);text-align:center">
+        <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:14px;font-family:'Syne',sans-serif">Scan to view our menu</div>
+        <div id="qrcode" style="margin:0 auto 14px;display:flex;justify-content:center"></div>
+        <div style="font-size:11px;color:var(--muted)">Your Restaurant Name</div>
+        <div style="font-size:10px;color:var(--green);font-weight:500;margin-top:3px">currycloud.mooo.com/menu/1</div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);text-align:center;font-weight:300">Customer sees this ↓</div>
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div style="font-size:9px;font-weight:700;color:var(--dark);margin-bottom:8px;font-family:'Syne',sans-serif">🍽 Our Menu</div>
+          <div class="phone-menu-item"><div style="width:30px;height:30px;background:var(--green-light);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🧆</div><div><div style="font-size:10px;font-weight:500;color:var(--dark)">Butter Paneer</div><div style="font-size:9px;color:var(--green-accent);font-weight:600;margin-top:1px">₹325</div></div></div>
+          <div class="phone-menu-item"><div style="width:30px;height:30px;background:var(--green-light);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🍔</div><div><div style="font-size:10px;font-weight:500;color:var(--dark)">Classic Burger</div><div style="font-size:9px;color:var(--green-accent);font-weight:600;margin-top:1px">₹250</div></div></div>
+          <div class="phone-menu-item"><div style="width:30px;height:30px;background:var(--green-light);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">☕</div><div><div style="font-size:10px;font-weight:500;color:var(--dark)">Filter Coffee</div><div style="font-size:9px;color:var(--green-accent);font-weight:600;margin-top:1px">₹80</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU URL SECTION -->
+
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <div style="text-align:center">
+      <div class="section-tag" style="justify-content:center;display:flex">Simple Pricing</div>
+      <h2 class="section-title">Plans for every restaurant</h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center">No hidden fees. No per-transaction charges. Save 1 month free on yearly plans.</p>
+      <!-- Toggle -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-top:32px">
+        <span id="monthLabel" style="font-size:14px;font-weight:600;color:var(--dark)">Monthly</span>
+        <div onclick="toggleBilling()" style="width:52px;height:28px;background:var(--green);border-radius:100px;cursor:pointer;position:relative;transition:background .3s" id="billingToggle">
+          <div id="toggleDot" style="width:22px;height:22px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:left .3s"></div>
+        </div>
+        <span id="yearLabel" style="font-size:14px;color:var(--muted);font-weight:400">Yearly <span style="background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:100px;font-size:11px;font-weight:600;margin-left:4px;border:1px solid #b8ddb8">Save 1 month</span></span>
+      </div>
+    </div>
+
+    <!-- Plan Tabs -->
+    <div style="display:flex;justify-content:center;gap:12px;margin-top:40px">
+      <button onclick="setPlan('basic')" id="tabBasic" style="padding:10px 32px;border-radius:100px;border:1.5px solid var(--green);background:var(--green);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s">Basic</button>
+      <button onclick="setPlan('pro')" id="tabPro" style="padding:10px 32px;border-radius:100px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:14px;font-weight:500;cursor:pointer;transition:all .2s">Pro</button>
+    </div>
+
+    <!-- Features summary -->
+    <div style="margin:24px auto 0;max-width:960px;background:var(--green-light);border:1px solid var(--border);border-radius:14px;padding:20px 28px">
+      <div style="font-size:11px;font-weight:600;color:var(--green);letter-spacing:.08em;text-transform:uppercase;text-align:center;margin-bottom:14px">What's included</div>
+      <div id="basicFeatures" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ POS &amp; Billing</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Kitchen KOT</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ QR Menu</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Offline Mode</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Sales Reports</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Role-based Access</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Promo Codes</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Table Surcharge</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Multi-branch</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Dine In / Take Away / Delivery</span>
+      </div>
+      <div id="proFeatures" style="display:none;gap:10px;flex-wrap:wrap;justify-content:center">
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Everything in Basic</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Merchant UPI &amp; Card</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Razorpay Integration</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ WhatsApp Bills &amp; Receipts</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ WhatsApp Payment Links</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ CRM &amp; Customer Loyalty</span>
+        <span style="background:#fff;border:1px solid var(--border);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--text)">✓ Customer Visit Tracking</span>
+      </div>
+    </div>
+
+    <!-- 4 Branch price cards -->
+    <div id="branchGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1000px;margin:32px auto 0"></div>
+
+    <div style="text-align:center;margin-top:28px;font-size:13px;color:var(--muted);font-weight:300">
+      6+ branches or enterprise chain? <a href="#demo" style="color:var(--green);font-weight:500">Contact us for custom pricing →</a>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO & CONTACT -->
+<section class="demo-section" id="demo">
+  <div class="demo-inner">
+    <div>
+      <div class="section-tag" style="color:var(--green-accent)">Get in Touch</div>
+      <div class="demo-info-title">Schedule a demo or send us a message</div>
+      <p class="demo-info-sub">See CurryCloud live with your own restaurant data. Our team will walk you through every feature in 30 minutes.</p>
+      <div class="demo-perks">
+        <div class="demo-perk"><div class="demo-perk-icon">🎯</div><div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">Personalised demo</div><div style="font-size:12px;color:rgba(255,255,255,0.5);font-weight:300">We demo with your actual menu and restaurant setup</div></div></div>
+        <div class="demo-perk"><div class="demo-perk-icon">⚡</div><div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">30-minute setup</div><div style="font-size:12px;color:rgba(255,255,255,0.5);font-weight:300">Go live in under 30 minutes — we handle the onboarding</div></div></div>
+        <div class="demo-perk"><div class="demo-perk-icon">📱</div><div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">Works on any device</div><div style="font-size:12px;color:rgba(255,255,255,0.5);font-weight:300">Phone, tablet, desktop — no hardware purchase needed</div></div></div>
+        <div class="demo-perk"><div class="demo-perk-icon">🔒</div><div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">Free trial included</div><div style="font-size:12px;color:rgba(255,255,255,0.5);font-weight:300">14 days free — no credit card required to start</div></div></div>
+        <div class="demo-perk"><div class="demo-perk-icon">📦</div><div><div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:3px">Inventory included</div><div style="font-size:12px;color:rgba(255,255,255,0.5);font-weight:300">Full stock control — PO, GRN, transfers, and auto-deduction on billing</div></div></div>
+      </div>
+      <!-- Contact email -->
+      <div style="margin-top:24px;display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(76,175,80,0.08);border:1px solid rgba(76,175,80,0.2);border-radius:12px">
+        <div style="width:36px;height:36px;background:rgba(76,175,80,0.15);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">✉️</div>
+        <div>
+          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Or email us directly</div>
+          <a href="mailto:contact@vorpet.com" style="font-size:14px;font-weight:600;color:var(--green-accent);text-decoration:none;letter-spacing:.01em">contact@vorpet.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="form-title">Contact Us</div>
+      <div class="form-sub">Fill in your details and we'll get back within 24 hours</div>
+      <form onsubmit="submitForm(event)">
+        <div class="form-grid-2">
+          <div class="form-group"><label class="form-label">First Name *</label><input class="form-input" type="text" placeholder="Rahul" required></div>
+          <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" type="text" placeholder="Sharma"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Restaurant Name *</label><input class="form-input" type="text" placeholder="Spice Garden" required></div>
+        <div class="form-group"><label class="form-label">Phone Number *</label><input class="form-input" type="tel" placeholder="+91 98765 43210" required></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="rahul@restaurant.com"></div>
+        <div class="form-grid-2">
+          <div class="form-group"><label class="form-label">City</label><input class="form-input" type="text" placeholder="Kolkata"></div>
+          <div class="form-group"><label class="form-label">Number of Branches</label>
+            <select class="form-input form-select">
+              <option value="">Select</option>
+              <option>1 branch</option>
+              <option>2–5 branches</option>
+              <option>6–10 branches</option>
+              <option>10+ branches</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">What are you looking for?</label>
+          <select class="form-input form-select">
+            <option value="">Select interest</option>
+            <option>Schedule a Demo</option>
+            <option>Start Free Trial</option>
+            <option>Pricing Information</option>
+            <option>General Enquiry</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" rows="3" placeholder="Tell us about your restaurant..." style="resize:vertical"></textarea></div>
+        <button type="submit" class="submit-btn">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="section-tag" style="justify-content:center;display:flex">Ready to start?</div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:clamp(32px,5vw,52px);font-weight:800;color:var(--dark);margin-bottom:20px;line-height:1.1">Your restaurant deserves better software</h2>
+    <p style="font-size:17px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:40px">Join restaurants using CurryCloud to run smarter operations, serve faster, and never lose a sale — even offline.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="https://currycloud.mooo.com" target="_blank" class="btn-primary" style="font-size:16px;padding:16px 40px">Launch CurryCloud →</a>
+      <a href="#demo" class="btn-outline" style="font-size:16px;padding:16px 40px">Schedule Demo</a>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:24px;font-weight:300">No credit card &nbsp;·&nbsp; 14-day free trial &nbsp;·&nbsp; Works on any device &nbsp;·&nbsp; Offline capable</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Curry<span>Cloud</span></div>
+  <p style="font-size:14px;font-weight:300;max-width:440px;margin:0 auto 0;line-height:1.6">Complete restaurant management — POS, billing, kitchen display, QR menu, inventory control, multi-branch stock, and offline mode.</p>
+  <div class="footer-links">
+    <a href="https://currycloud.mooo.com" target="_blank">Launch App</a>
+    <a href="https://currycloud.mooo.com/menu/1" target="_blank">Sample Menu</a>
+    <a href="#workflow">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#offline">Offline Mode</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#demo">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 CurryCloud. Restaurant Management Software.</div>
+</footer>
+
+<script>
+const steps = [
+  {
+    num:'Step 01',title:'Select a Table',
+    desc:'Waiter or staff opens CurryCloud on any device — phone, tablet, or desktop. A live grid of all tables shows free (green) and occupied (amber) status.',
+    details:['See free and occupied tables at a glance','Table surcharge auto-applied on selection','Supports Dine In, Take Away, and Delivery'],
+    mockup:'tables'
+  },
+  {
+    num:'Step 02',title:'Add Items to Order',
+    desc:'Browse the menu by category, search items, filter by veg/non-veg. Tap any item to add it. Quantity can be increased or decreased instantly.',
+    details:['Search and filter by category','Add items with one tap','Quantity +/− controls','Veg / Non-veg indicators'],
+    mockup:'items'
+  },
+  {
+    num:'Step 03',title:'Send KOT to Kitchen',
+    desc:'Once items are selected, send a KOT (Kitchen Order Ticket) to the kitchen. The kitchen display shows the order instantly.',
+    details:['KOT sent to kitchen in real time','Kitchen Display System shows all KOTs','Staff can start, cook, and mark ready'],
+    mockup:'kot'
+  },
+  {
+    num:'Step 04',title:'Kitchen Updates Status',
+    desc:'Kitchen staff updates each KOT — from Open to Cooking to Ready. The POS screen reflects the status in real time.',
+    details:['KOT Open → Cooking → Ready','POS shows cooking status per item','Colour-coded status indicators'],
+    mockup:'kotstatus'
+  },
+  {
+    num:'Step 05',title:'Generate Bill',
+    desc:'When customer is ready, generate the bill with SGST, CGST, table surcharge, promo codes, and round-off — all calculated automatically.',
+    details:['SGST & CGST calculated automatically','Table surcharge and promo codes applied','Round-off row shown clearly'],
+    mockup:'bill'
+  },
+  {
+    num:'Step 06',title:'Accept Payment',
+    desc:'Choose from Cash, Personal UPI (show your QR), Merchant (Razorpay — send WhatsApp payment link for UPI/Card), Split, or Complimentary. Bill generates and table is freed instantly.',
+    details:['Cash — enter amount, auto change calculation','Personal UPI — show your QR code to customer','Merchant — send Razorpay link via WhatsApp, customer pays by UPI/Card/NetBanking','Bill auto-generates on successful payment','WhatsApp bill & receipt sent automatically'],
+    mockup:'payment'
+  },
+  {
+    num:'Step 07',title:'WhatsApp Payment Request',
+    desc:'For Merchant payment, CurryCloud sends a Razorpay payment link directly to the customer\'s WhatsApp. Customer sees the full bill breakdown and clicks to pay.',
+    details:['Full bill breakdown sent on WhatsApp','Razorpay link — UPI, Card, NetBanking, Wallets','Customer pays from their phone','System polls for payment confirmation'],
+    mockup:'whatsapprequest'
+  },
+  {
+    num:'Step 08',title:'Bill Receipt Printed',
+    desc:'After payment, a professional receipt is printed automatically — with your restaurant logo, GSTIN, FSSAI, items, GST breakdown, and QR code for UPI payment.',
+    details:['Auto-prints on bill generation','Restaurant logo, address, GSTIN, FSSAI','Full item list with GST breakdown','UPI QR code on receipt for scan-to-pay'],
+    mockup:'receipt'
+  },
+  {
+    num:'Step 09',title:'WhatsApp Bill Sent',
+    desc:'Simultaneously, the complete bill is sent to the customer on WhatsApp — with all items, amounts, GST, and UPI payment details. No manual sending needed.',
+    details:['Sent automatically on bill generation','Full itemised bill with GST','UPI ID included for payment','Powered by Twilio WhatsApp API'],
+    mockup:'whatsappbill'
+  },
+  {
+    num:'Step 10',title:'Sales Report Updated',
+    desc:'Every bill instantly appears in the Sales Report. Track daily revenue, payment methods, average bill, GST collected, and individual bill details.',
+    details:['Real-time revenue tracking','Payment method breakdown — Cash, UPI, Card','GST summary ready for filing','All bills searchable and downloadable'],
+    mockup:'report'
+  }
+];
+
+let current = 0;
+
+function renderNav(){
+  const nav = document.getElementById('stepsNav');
+  nav.innerHTML = steps.map((s,i)=>`<button class="flow-step-btn ${i===current?'active':''}" onclick="goStep(${i})"></button>`).join('');
+  document.getElementById('stepCounter').textContent = `${current+1} of ${steps.length}`;
+}
+
+function renderMockup(type){
+  if(type==='tables') return `
+    <div class="flow-mockup-title">Table Selection</div>
+    <div class="table-grid">
+      ${[['T-1','4 seats','free'],['T-2','2 seats','occupied'],['T-3','4 seats','free'],
+         ['T-4','6 seats','free'],['T-5','4 seats','selected'],['T-6','2 seats','occupied']].map(([n,s,st])=>`
+        <div class="table-item table-${st}">
+          <div class="table-icon-f">🪑</div>
+          <div class="table-name">${n}</div>
+          <div class="table-seats">${s}</div>
+          <div class="table-status ts-${st==='free'?'free':'occ'}">${st==='selected'?'selected':st}</div>
+        </div>`).join('')}
+    </div>`;
+  if(type==='items') return `
+    <div class="flow-mockup-title">Menu Items</div>
+    <div class="menu-items">
+      ${[['🧆 Butter Paneer','₹325',2,true],['🍔 Classic Burger','₹250',1,true],['🌶 Chicken Tikka','₹380',0,false],['☕ Filter Coffee','₹80',0,true]].map(([n,p,q,sel])=>`
+        <div class="menu-item ${sel&&q>0?'selected':''}">
+          <div class="menu-item-name">${n}</div>
+          <div class="menu-item-qty">
+            ${q>0?`<button class="qty-btn">−</button><span class="qty-num">${q}</span><button class="qty-btn">+</button>`:`<button class="qty-btn" style="width:60px;font-size:11px">+ Add</button>`}
+          </div>
+        </div>`).join('')}
+    </div>`;
+  if(type==='kot') return `
+    <div class="flow-mockup-title">KOT Sent to Kitchen</div>
+    <div class="kot-ticket">
+      <div class="kot-header"><div><div class="kot-num">KOT-000042-1</div><div class="kot-table">T-5 · Dine In · 2 covers</div></div><div style="font-size:11px;color:rgba(255,255,255,0.4)">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div></div>
+      <div class="kot-item"><span>Butter Paneer</span><span style="color:rgba(255,255,255,0.5)">× 2</span></div>
+      <div class="kot-item"><span>Classic Burger</span><span style="color:rgba(255,255,255,0.5)">× 1</span></div>
+      <div class="kot-item"><span>Filter Coffee</span><span style="color:rgba(255,255,255,0.5)">× 2</span></div>
+      <span class="kot-status ks-open">● KOT Open — waiting for kitchen</span>
+    </div>`;
+  if(type==='kotstatus') return `
+    <div class="flow-mockup-title">Kitchen Status Updates</div>
+    <div class="kot-ticket">
+      <div class="kot-header"><div class="kot-num">KOT-000042-1</div><div class="kot-table">T-5 · Dine In</div></div>
+      <div class="kot-item"><span>Butter Paneer × 2</span><span style="color:#86efac;font-size:10px">✓ Ready</span></div>
+      <div class="kot-item"><span>Classic Burger × 1</span><span style="color:#93c5fd;font-size:10px">🔥 Cooking</span></div>
+      <div class="kot-item"><span>Filter Coffee × 2</span><span style="color:#fcd34d;font-size:10px">⏳ Open</span></div>
+      <span class="kot-status ks-cooking">🔥 Kitchen is cooking</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--green-accent)"></div></div>
+    </div>`;
+  if(type==='bill') return `
+    <div class="flow-mockup-title">Bill Summary</div>
+    <div class="bill-modal">
+      <div class="bill-title">🧾 Bill — Order #000042</div>
+      <div class="bill-row"><span>Subtotal (3 items)</span><span>₹925</span></div>
+      <div class="bill-row" style="color:#92400e"><span>⚡ Table Surcharge</span><span>+₹30</span></div>
+      <div class="bill-row" style="color:#93c5fd"><span>SGST (2.5%)</span><span>+₹23</span></div>
+      <div class="bill-row" style="color:#93c5fd"><span>CGST (2.5%)</span><span>+₹23</span></div>
+      <div class="bill-row" style="color:rgba(255,255,255,0.4)"><span>Round Off</span><span>-₹0.50</span></div>
+      <div class="bill-row total"><span>Total Payable</span><span style="color:var(--green-accent)">₹1,001</span></div>
+    </div>`;
+  if(type==='payment') return `
+    <div class="flow-mockup-title">Payment Methods</div>
+    <div class="bill-modal">
+      <div class="bill-row total" style="margin-bottom:14px"><span>Amount Due</span><span style="color:var(--green-accent)">₹1,001</span></div>
+      <div class="pay-methods" style="grid-template-columns:repeat(5,1fr)">
+        <div class="pay-method"><div class="pay-method-icon">💵</div><div class="pay-method-label">Cash</div></div>
+        <div class="pay-method"><div class="pay-method-icon">📲</div><div class="pay-method-label">Personal UPI</div></div>
+        <div class="pay-method selected"><div class="pay-method-icon">🏦</div><div class="pay-method-label">Merchant</div></div>
+        <div class="pay-method"><div class="pay-method-icon">➗</div><div class="pay-method-label">Split</div></div>
+        <div class="pay-method"><div class="pay-method-icon">🎁</div><div class="pay-method-label">Free</div></div>
+      </div>
+      <div style="margin-top:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px">
+        <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:6px">Merchant — Payment via Razorpay</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <div style="flex:1;background:rgba(76,175,80,0.2);border:1px solid rgba(76,175,80,0.4);border-radius:6px;padding:6px;text-align:center;font-size:10px;color:#86efac">UPI (Razorpay)</div>
+          <div style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px;text-align:center;font-size:10px;color:rgba(255,255,255,0.5)">Card</div>
+        </div>
+        <div style="background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.3);border-radius:6px;padding:7px;font-size:10px;color:#86efac">📱 WhatsApp payment link sent → Customer pays → Bill auto-generates</div>
+      </div>
+    </div>`;
+  if(type==='whatsapprequest') return `
+    <div class="flow-mockup-title">WhatsApp Payment Request</div>
+    <div style="background:#e5ddd5;border-radius:12px;padding:14px;font-family:sans-serif">
+      <div style="background:#fff;border-radius:10px;padding:12px;max-width:260px;margin-left:auto;box-shadow:0 1px 2px rgba(0,0,0,0.1)">
+        <div style="font-size:11px;font-weight:700;color:#1a3a1c;margin-bottom:8px">🏪 Your Restaurant</div>
+        <div style="font-size:9px;color:#555;margin-bottom:6px">Hi <strong>Customer</strong>, your order is ready! 🍽️</div>
+        <div style="font-size:9px;color:#333;line-height:1.6;margin-bottom:6px">
+          • Butter Paneer 1 × ₹325 = ₹325<br>
+          • Classic Burger 1 × ₹250 = ₹250
+        </div>
+        <div style="font-size:9px;color:#555;border-top:1px dashed #ddd;padding-top:6px;margin-bottom:6px">
+          Subtotal &nbsp;&nbsp;&nbsp; ₹575<br>
+          Surcharge &nbsp; +₹30<br>
+          SGST &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +₹14<br>
+          CGST &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +₹14
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#1a3a1c;margin-bottom:8px">AMOUNT TO PAY &nbsp; ₹634</div>
+        <div style="background:#25d366;color:#fff;border-radius:6px;padding:7px;text-align:center;font-size:10px;font-weight:600">💳 Click to Pay (Razorpay)</div>
+        <div style="font-size:8px;color:#999;margin-top:6px;text-align:center">Supports UPI, Card, NetBanking & Wallets</div>
+        <div style="font-size:8px;color:#aaa;text-align:right;margin-top:4px">7:38 PM ✓✓</div>
+      </div>
+    </div>`;
+  if(type==='receipt') return `
+    <div class="flow-mockup-title">Bill Receipt</div>
+    <div style="background:#fff;border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:10px;color:#111;max-height:240px;overflow-y:auto">
+      <div style="text-align:center;margin-bottom:8px">
+        <div style="font-size:12px;font-weight:700">Your Restaurant Name</div>
+        <div style="font-size:9px;color:#555">Kolkata Sector 5 | Ph: 9876543210</div>
+        <div style="font-size:9px;color:#555">GSTIN: 22AAAAA0000A1Z5</div>
+      </div>
+      <div style="border-top:1px dashed #888;padding-top:8px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between"><span>Bill No:</span><span>BILL-2026-0064</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Table:</span><span>T-2</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Payment:</span><span>Card</span></div>
+      </div>
+      <div style="border-top:1px dashed #888;padding:6px 0">
+        <div style="display:flex;justify-content:space-between"><span>🟢 Classic Burger ×1</span><span>₹250</span></div>
+        <div style="display:flex;justify-content:space-between"><span>🟢 Butter Paneer ×1</span><span>₹325</span></div>
+      </div>
+      <div style="border-top:1px dashed #888;padding-top:6px">
+        <div style="display:flex;justify-content:space-between"><span>Subtotal</span><span>₹575</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Surcharge</span><span>+₹30</span></div>
+        <div style="display:flex;justify-content:space-between"><span>SGST 2.5%</span><span>+₹14</span></div>
+        <div style="display:flex;justify-content:space-between"><span>CGST 2.5%</span><span>+₹14</span></div>
+      </div>
+      <div style="border-top:1px solid #333;padding-top:6px;font-weight:700;display:flex;justify-content:space-between;font-size:11px"><span>TOTAL PAYABLE</span><span>₹634</span></div>
+      <div style="text-align:center;margin-top:8px;font-size:9px;color:#555">Thank you for dining with us!</div>
+    </div>`;
+  if(type==='whatsappbill') return `
+    <div class="flow-mockup-title">WhatsApp Bill — Auto Sent</div>
+    <div style="background:#e5ddd5;border-radius:12px;padding:14px">
+      <div style="background:#fff;border-radius:10px;padding:12px;max-width:260px;margin-left:auto;box-shadow:0 1px 2px rgba(0,0,0,0.1)">
+        <div style="font-size:11px;font-weight:700;color:#1a3a1c;margin-bottom:8px">🏪 Your Restaurant</div>
+        <div style="font-size:9px;color:#555;margin-bottom:4px">Bill No: <span style="color:#1a3a1c;font-weight:600">BILL-2026-0064</span></div>
+        <div style="font-size:9px;color:#555;margin-bottom:6px">Table: T-2 | Date: 16/4/2026 11:45 am</div>
+        <div style="font-size:9px;color:#333;border-top:1px dashed #eee;padding-top:6px;margin-bottom:6px;line-height:1.7">
+          • Classic Burger 1 × ₹250 = ₹250<br>
+          • Butter Paneer 1 × ₹325 = ₹325
+        </div>
+        <div style="font-size:9px;color:#555;border-top:1px dashed #ddd;padding-top:6px;margin-bottom:6px;line-height:1.8">
+          Subtotal &nbsp;&nbsp; ₹575<br>
+          Surcharge +₹30<br>
+          SGST &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +₹14<br>
+          CGST &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +₹14
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#1a3a1c;margin-bottom:6px">TOTAL PAYABLE &nbsp; ₹634</div>
+        <div style="font-size:9px;color:#555">💳 Pay via UPI: 9876543210@ybl<br>UPI Name: Your Name</div>
+        <div style="font-size:8px;color:#aaa;text-align:right;margin-top:6px">11:45 AM ✓✓</div>
+      </div>
+    </div>`;
+  if(type==='report') return `
+    <div class="flow-mockup-title">Sales Report — Live Updated</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:rgba(76,175,80,0.15);border:1px solid rgba(76,175,80,0.3);border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:9px;color:rgba(255,255,255,0.5);margin-bottom:3px">TODAY'S REVENUE</div>
+          <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#86efac">₹12,480</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.4)">↑ 14% vs yesterday</div>
+        </div>
+        <div style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:9px;color:rgba(255,255,255,0.5);margin-bottom:3px">BILLS TODAY</div>
+          <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#93c5fd">47</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.4)">Avg ₹265/bill</div>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px">
+        <div style="font-size:9px;color:rgba(255,255,255,0.4);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Payment Methods</div>
+        ${[['Cash','₹6,240','50%','#86efac'],['UPI','₹4,029','32%','#93c5fd'],['Card','₹2,211','18%','#fcd34d']].map(([m,v,p,c])=>`
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+          <span style="font-size:11px;color:rgba(255,255,255,0.7);width:50px">${m}</span>
+          <div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:2px"><div style="height:100%;background:${c};border-radius:2px;width:${p}"></div></div>
+          <span style="font-size:10px;color:${c};font-weight:600">${v}</span>
+        </div>`).join('')}
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px">
+        <div style="font-size:9px;color:rgba(255,255,255,0.4);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Latest Bills</div>
+        ${[['BILL-0064','₹634','Card'],['BILL-0063','₹513','UPI'],['BILL-0062','₹1,001','Cash']].map(([b,a,m])=>`
+        <div style="display:flex;justify-content:space-between;font-size:10px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+          <span style="color:rgba(255,255,255,0.6)">${b}</span>
+          <span style="color:#86efac;font-weight:600">${a}</span>
+          <span style="color:rgba(255,255,255,0.4)">${m}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  return '';
+}
+
+function renderStep(){
+  const s = steps[current];
+  document.getElementById('flowScreens').innerHTML = `
+    <div class="flow-content">
+      <div class="flow-left">
+        <div class="flow-step-num">${s.num} of ${steps.length}</div>
+        <div class="flow-step-title">${s.title}</div>
+        <div class="flow-step-desc">${s.desc}</div>
+        <div class="flow-details">${s.details.map(d=>`<div class="flow-detail">${d}</div>`).join('')}</div>
+      </div>
+      <div class="flow-right">${renderMockup(s.mockup)}</div>
+    </div>`;
+  renderNav();
+}
+
+function goStep(i){ current = i; renderStep(); }
+function nextStep(){ if(current < steps.length-1){ current++; renderStep(); } }
+function prevStep(){ if(current > 0){ current--; renderStep(); } }
+
+// Pricing data
+const pricingData = {
+  basic: [
+    { branches: 1, label: '1 Branch',   m: 600,   y: 6600  },
+    { branches: 2, label: '2 Branches', m: 1000,  y: 11000 },
+    { branches: 3, label: '3 Branches', m: 1400,  y: 15000 },
+    { branches: 4, label: '4 Branches', m: 2000,  y: 22000 },
+  ],
+  pro: [
+    { branches: 1, label: '1 Branch',   m: 800,   y: 8800  },
+    { branches: 2, label: '2 Branches', m: 1300,  y: 14000 },
+    { branches: 3, label: '3 Branches', m: 1800,  y: 20000 },
+    { branches: 4, label: '4 Branches', m: 2600,  y: 28000 },
+  ]
+};
+
+let isYearly = false;
+let currentPlan = 'basic';
+
+function renderBranchGrid() {
+  const tiers = pricingData[currentPlan];
+  const isPro = currentPlan === 'pro';
+  const grid = document.getElementById('branchGrid');
+  if(!grid) return;
+  grid.innerHTML = tiers.map((t, i) => {
+    const price = isYearly ? t.y : t.m;
+    const period = isYearly ? '/year' : '/month';
+    const saving = isYearly ? `<div style="font-size:11px;color:var(--green-accent);margin-bottom:8px;font-weight:500">Save ₹${(t.m*12-t.y).toLocaleString('en-IN')}</div>` : '<div style="min-height:20px"></div>';
+    const perBranch = Math.round(isYearly ? t.y/12/t.branches : t.m/t.branches);
+    const isFeatured = i === 0 && isPro;
+    return `<div style="background:${isPro?'var(--green)':'#fff'};border:${isFeatured?'2px solid var(--green-accent)':'1px solid var(--border)'};border-radius:16px;padding:24px;text-align:center;position:relative;transition:all .3s">
+      ${isFeatured?'<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--green-accent);color:var(--dark);padding:3px 14px;border-radius:100px;font-size:10px;font-weight:700;white-space:nowrap">Most Popular</div>':''}
+      <div style="font-size:13px;font-weight:600;color:${isPro?'#fff':'var(--dark)'};margin-bottom:8px">${t.label}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:${isPro?'#fff':'var(--dark)'}">₹${price.toLocaleString('en-IN')}</div>
+      <div style="font-size:12px;color:${isPro?'rgba(255,255,255,0.6)':'var(--muted)'};margin-bottom:6px">${period}</div>
+      ${saving}
+      <div style="font-size:11px;color:${isPro?'rgba(255,255,255,0.5)':'var(--muted)'};margin-bottom:16px">≈ ₹${perBranch}/branch/month</div>
+      <a href="#demo" style="display:block;padding:11px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;background:${isPro?'#fff':'var(--green)'};color:${isPro?'var(--green)':'#fff'}">Get Started</a>
+    </div>`;
+  }).join('');
+}
+
+function setPlan(plan) {
+  currentPlan = plan;
+  const tabBasic = document.getElementById('tabBasic');
+  const tabPro = document.getElementById('tabPro');
+  const basicF = document.getElementById('basicFeatures');
+  const proF = document.getElementById('proFeatures');
+  if(tabBasic) { tabBasic.style.background = plan==='basic'?'var(--green)':'transparent'; tabBasic.style.color = plan==='basic'?'#fff':'var(--muted)'; tabBasic.style.borderColor = plan==='basic'?'var(--green)':'var(--border)'; }
+  if(tabPro) { tabPro.style.background = plan==='pro'?'var(--green)':'transparent'; tabPro.style.color = plan==='pro'?'#fff':'var(--muted)'; tabPro.style.borderColor = plan==='pro'?'var(--green)':'var(--border)'; }
+  if(basicF) basicF.style.display = plan==='basic'?'flex':'none';
+  if(proF) proF.style.display = plan==='pro'?'flex':'none';
+  renderBranchGrid();
+}
+
+function toggleBilling() {
+  isYearly = !isYearly;
+  const dot = document.getElementById('toggleDot');
+  const monthLabel = document.getElementById('monthLabel');
+  if(dot) dot.style.left = isYearly ? '27px' : '3px';
+  if(monthLabel) { monthLabel.style.color = isYearly?'var(--muted)':'var(--dark)'; monthLabel.style.fontWeight = isYearly?'400':'600'; }
+  renderBranchGrid();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderStep();
+  setPlan('basic');
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  // Generate real QR code for menu URL
+  window.addEventListener('load', function() {
+    const qrEl = document.getElementById('qrcode');
+    if(qrEl && typeof QRCode !== 'undefined') {
+      new QRCode(qrEl, {
+        text: 'https://currycloud.mooo.com/menu/1',
+        width: 150,
+        height: 150,
+        colorDark: '#1a3a1c',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+  });
+async function submitForm(e){
+  e.preventDefault();
+  const form = e.target;
+  const fields = form.querySelectorAll('input,select,textarea');
+  const vals = Array.from(fields).map(f => f.value);
+  const payload = {
+    first_name:      vals[0] || '',
+    last_name:       vals[1] || '',
+    restaurant_name: vals[2] || '',
+    phone:           vals[3] || '',
+    email:           vals[4] || '',
+    city:            vals[5] || '',
+    branches:        vals[6] || '',
+    interest:        vals[7] || '',
+    message:         vals[8] || '',
+  };
+  const t = document.getElementById('toast');
+  try {
+    const res = await fetch('https://currycloud.mooo.com/contactleads/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      t.textContent = "✓ Message sent! We'll contact you within 24 hours.";
+      t.style.background = 'var(--green)';
+      form.reset();
+    } else {
+      t.textContent = "⚠ Something went wrong. Please try again.";
+      t.style.background = '#dc2626';
+    }
+  } catch {
+    t.textContent = "⚠ Network error. Please try again.";
+    t.style.background = '#dc2626';
+  }
+  t.classList.add('show');
+  setTimeout(() => { t.classList.remove('show'); t.style.background = ''; }, 3500);
+}
+</script>
+</body>
+</html>

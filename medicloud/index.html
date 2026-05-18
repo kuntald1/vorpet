@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediCloud — Lab Middleware v5.0 · Vorpet</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#f97316;--orange-dark:#ea580c;--dark:#0f1117;--dark2:#1a1d27;--dark3:#22263a;--cream:#f9f9f9;--text:#1a1a2e;--muted:#64748b;--border:#e2e8f0;--green:#22c55e}
+html{scroll-behavior:smooth}
+body{font-family:"Inter",sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;padding-top:52px}
+.vorpet-nav{position:fixed;top:0;left:0;right:0;z-index:9999;height:52px;background:rgba(10,10,15,0.97);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:space-between;padding:0 40px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.vorpet-logo{font-family:"Inter",sans-serif;font-weight:800;font-size:16px;color:#fff;text-decoration:none}
+.vorpet-logo span{color:#f59e0b}
+.vorpet-back{font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none;transition:color .2s}
+.vorpet-back:hover{color:#fff}
+.vorpet-launch{background:var(--orange);color:#fff;padding:8px 20px;border-radius:6px;font-size:13px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:6px;transition:all .2s}
+.vorpet-launch:hover{background:var(--orange-dark);transform:translateY(-1px)}
+.hero{background:var(--dark);color:white;padding:90px 48px 80px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(249,115,22,0.15) 0%,transparent 70%);top:-100px;right:100px;pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);border-radius:100px;padding:6px 16px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:24px;color:#fb923c}
+.hero h1{font-family:"Inter",sans-serif;font-size:clamp(36px,5vw,58px);font-weight:800;line-height:1.05;letter-spacing:-2px;margin-bottom:20px}
+.hero h1 span{color:var(--orange)}
+.hero p{font-size:16px;opacity:0.65;line-height:1.8;max-width:480px;margin-bottom:36px;font-weight:300}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn-orange{background:var(--orange);color:#fff;padding:14px 32px;border-radius:8px;font-weight:700;font-size:15px;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.btn-orange:hover{background:var(--orange-dark);transform:translateY(-2px)}
+.btn-ghost{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.8);padding:14px 32px;border-radius:8px;font-weight:500;font-size:15px;text-decoration:none;border:1px solid rgba(255,255,255,0.12);transition:all .2s}
+.btn-ghost:hover{background:rgba(255,255,255,0.1)}
+.dash-mockup{background:var(--dark2);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden}
+.dash-top{background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.06);padding:14px 18px;display:flex;align-items:center;gap:12px}
+.dash-logo-box{width:34px;height:34px;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.dash-logo-text{font-size:13px;font-weight:700;color:#fff}
+.dash-logo-sub{font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px}
+.online-pill{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:10px;color:var(--green);background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);padding:3px 10px;border-radius:100px}
+.dash-body{padding:18px}
+.ov-tag{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--orange);text-transform:uppercase;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:100px;padding:3px 10px;display:inline-block;margin-bottom:10px}
+.dash-h{font-size:18px;font-weight:800;color:#fff;margin-bottom:2px}
+.dash-sh{font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:14px}
+.d-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px}
+.d-card{background:var(--dark3);border-radius:7px;padding:10px;border:1px solid rgba(255,255,255,0.04);text-align:center}
+.d-num{font-family:"Inter",sans-serif;font-size:18px;font-weight:700;color:#fff}
+.d-lbl{font-size:9px;color:rgba(255,255,255,0.35);margin-top:2px}
+.ldf{font-size:10px;font-weight:700;color:#fff;margin-bottom:8px}
+.flow-row{display:flex;align-items:center;gap:4px}
+.fn{background:var(--dark3);border-radius:6px;padding:7px 8px;font-size:9px;text-align:center;flex:1;border:1px solid rgba(255,255,255,0.05)}
+.fn.hl{background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.3)}
+.fn-i{font-size:13px;margin-bottom:2px}
+.fn-n{font-weight:600;color:rgba(255,255,255,0.8)}
+.fn-s{color:rgba(255,255,255,0.3);font-size:8px}
+.fa{color:rgba(255,255,255,0.2);font-size:10px;flex-shrink:0}
+.stats-bar{background:#fff;display:flex;justify-content:center;flex-wrap:wrap;box-shadow:0 2px 16px rgba(0,0,0,0.06);border-bottom:1px solid var(--border)}
+.stat{padding:24px 48px;text-align:center;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-num{font-family:"Inter",sans-serif;font-size:30px;font-weight:800;color:var(--orange)}
+.stat-label{font-size:13px;color:var(--muted);margin-top:4px}
+.section{padding:80px 48px;max-width:1100px;margin:0 auto}
+.section-label{color:var(--orange);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.section-title{font-family:"Inter",sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-0.5px;margin-bottom:14px;color:var(--text)}
+.section-sub{font-size:17px;color:var(--muted);line-height:1.7;font-weight:300;max-width:600px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:48px}
+.feat-card{background:#fff;border-radius:16px;padding:32px;border:1px solid var(--border);transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.feat-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(249,115,22,0.1);border-color:var(--orange)}
+.feat-icon{font-size:36px;margin-bottom:16px}
+.feat-card h3{font-size:18px;font-weight:700;margin-bottom:10px;color:var(--text)}
+.feat-card p{font-size:14px;color:var(--muted);line-height:1.7;font-weight:300}
+.feat-tag{display:inline-block;margin-top:12px;background:#fff7ed;color:var(--orange-dark);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.flow-section{background:var(--dark);padding:80px 48px}
+.flow-inner{max-width:1100px;margin:0 auto}
+.flow-section .section-label{color:#fb923c}
+.flow-section .section-title{color:#fff}
+.flow-section .section-sub{color:rgba(255,255,255,0.5)}
+.flow-diagram{display:flex;align-items:center;gap:0;margin-top:48px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:40px}
+.flow-box{flex:1;text-align:center;padding:28px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04)}
+.flow-box.highlight{background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.35)}
+.flow-box-icon{font-size:32px;margin-bottom:12px}
+.flow-box-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+.flow-box-sub{font-size:12px;color:rgba(255,255,255,0.4)}
+.flow-connector{padding:0 12px;color:rgba(255,255,255,0.2);font-size:22px}
+.modules-bg{background:var(--dark2);padding:80px 48px}
+.modules-inner{max-width:1100px;margin:0 auto}
+.modules-bg .section-label{color:#fb923c}
+.modules-bg .section-title{color:#fff}
+.modules-bg .section-sub{color:rgba(255,255,255,0.5)}
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:40px}
+.mod-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:24px;color:#fff;transition:all .3s}
+.mod-card:hover{background:rgba(249,115,22,0.08);border-color:rgba(249,115,22,0.25);transform:translateY(-2px)}
+.mod-card h4{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.mod-card ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.mod-card ul li{font-size:13px;color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:8px}
+.mod-card ul li::before{content:"✓";color:var(--orange);font-weight:700;flex-shrink:0}
+.wf-wrap{background:#fff;padding:80px 48px;border-top:1px solid var(--border)}
+.wf-inner{max-width:1100px;margin:0 auto}
+.workflow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:48px}
+.wf-step{text-align:center;padding:32px 16px;position:relative}
+.wf-step:not(:last-child)::after{content:"→";position:absolute;right:-10px;top:46px;font-size:22px;color:var(--orange)}
+.step-num{width:52px;height:52px;background:var(--orange);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;margin:0 auto 16px}
+.wf-step h4{font-size:15px;font-weight:700;margin-bottom:8px}
+.wf-step p{font-size:13px;color:var(--muted);line-height:1.5}
+.cta{background:var(--dark);padding:100px 48px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.cta-glow{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(249,115,22,0.12) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.cta-inner{position:relative;z-index:1}
+.cta h2{font-family:"Inter",sans-serif;font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-0.5px;margin-bottom:16px}
+.cta h2 span{color:var(--orange)}
+.cta p{font-size:17px;opacity:0.6;margin-bottom:40px;font-weight:300}
+.cta-launch{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:#fff;padding:18px 48px;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;transition:all .2s}
+.cta-launch:hover{background:var(--orange-dark);transform:translateY(-2px)}
+footer{background:#0a0a0f;color:rgba(255,255,255,0.35);padding:36px 48px;text-align:center;font-size:13px}
+footer a{color:rgba(255,255,255,0.35);text-decoration:none}
+footer a:hover{color:#fff}
+@media(max-width:900px){
+  .bhorpet-nav{padding:0 16px}
+  .hero-inner{grid-template-columns:1fr!important}
+  .dash-mockup{display:none}
+  .section,.flow-section,.modules-bg,.wf-wrap{padding:48px 20px}
+  .modules-grid{grid-template-columns:1fr}
+  .workflow{grid-template-columns:1fr 1fr}
+  .flow-diagram{flex-direction:column;padding:20px}
+  .stats-bar{flex-direction:column}
+  .stat{border-right:none;border-bottom:1px solid var(--border)}
+  .cta{padding:60px 20px}
+  .hero{padding:80px 20px 60px}
+  h1{font-size:clamp(32px,8vw,48px)!important;letter-spacing:-1px!important}.hero-inner{grid-template-columns:1fr}.dash-mockup{display:none}.section,.flow-section,.modules-bg,.wf-wrap{padding:60px 24px}.vorpet-nav{padding:0 20px}.workflow{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<nav class="vorpet-nav">
+  <div style="display:flex;align-items:center;gap:20px">
+    <a href="../index.html" class="vorpet-logo" style="display:flex;align-items:center;gap:8px;text-decoration:none">
+      <div style="width:30px;height:30px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="22" height="20" viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 13 Q13 7 16 2" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M26 11 Q23 4 26 0" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M36 13 Q33 7 36 2" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><ellipse cx="26" cy="18" rx="20" ry="5" fill="#f59e0b"/><path d="M10 16 Q16 11 21 16 Q26 21 31 16 Q36 11 42 16" stroke="#111" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M6 18 Q6 40 26 40 Q46 40 46 18Z" fill="#f59e0b"/><path d="M11 23 Q10 33 13 38" stroke="#fde68a" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/></svg>
+      </div>
+      <span style="font-family:serif;font-weight:800;font-size:16px;color:#fff">Vor<span style="color:#f59e0b">pet</span></span>
+    </a>
+    <a href="../index.html" class="vorpet-back">← All Products</a>
+  </div>
+  <a href="https://medicloud.mooo.com" target="_blank" class="vorpet-launch">🚀 Launch App →</a>
+</nav>
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">🔬 Lab Middleware · v5.0</div>
+      <h1>Lab Data.<br><span>Automated.</span></h1>
+      <p>MediCloud connects your lab machines directly to your system. Auto-parse results, manage patients, and generate PDF reports — zero manual entry.</p>
+      <div class="hero-btns">
+        <a href="https://medicloud.mooo.com" target="_blank" class="btn-orange">🚀 Launch MediCloud →</a>
+        <a href="../index.html" class="btn-ghost">← Back to Vorpet</a>
+      </div>
+    </div>
+    <div class="dash-mockup">
+      <div class="dash-top">
+        <div class="dash-logo-box">🧪</div>
+        <div><div class="dash-logo-text">MediCloud</div><div class="dash-logo-sub">Lab Middleware v5.0</div></div>
+        <div class="online-pill">● System Online</div>
+      </div>
+      <div class="dash-body">
+        <div class="ov-tag">Overview</div>
+        <div class="dash-h">Dashboard</div>
+        <div class="dash-sh">Welcome back, Kuntal. Here's what's happening in your lab.</div>
+        <div class="d-cards">
+          <div class="d-card"><div class="d-num">7</div><div class="d-lbl">Total Devices</div></div>
+          <div class="d-card"><div class="d-num" style="color:#22c55e">0</div><div class="d-lbl">Online</div></div>
+          <div class="d-card"><div class="d-num">4</div><div class="d-lbl">Patients</div></div>
+          <div class="d-card"><div class="d-num">2</div><div class="d-lbl">Results</div></div>
+        </div>
+        <div class="ldf">🚀 Live Data Flow</div>
+        <div class="flow-row">
+          <div class="fn"><div class="fn-i">🔬</div><div class="fn-n" style="color:#f97316">Lab Machine</div><div class="fn-s">ASTM Protocol</div></div>
+          <div class="fa">→</div>
+          <div class="fn"><div class="fn-i">⚡</div><div class="fn-n" style="color:#f97316">TCP Connect</div><div class="fn-s">Port 5600</div></div>
+          <div class="fa">→</div>
+          <div class="fn hl"><div class="fn-i">🧠</div><div class="fn-n">MediCloud</div><div class="fn-s">Auto Parse</div></div>
+          <div class="fa">→</div>
+          <div class="fn"><div class="fn-i">📄</div><div class="fn-n" style="color:#22c55e">PDF Report</div><div class="fn-s">Instant</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num">v5.0</div><div class="stat-label">Latest Version</div></div>
+  <div class="stat"><div class="stat-num">ASTM</div><div class="stat-label">Protocol Support</div></div>
+  <div class="stat"><div class="stat-num">0ms</div><div class="stat-label">Manual Entry</div></div>
+  <div class="stat"><div class="stat-num">PDF</div><div class="stat-label">Instant Reports</div></div>
+</div>
+<div class="section">
+  <div class="section-label">Core Features</div>
+  <div class="section-title">Lab automation, simplified.</div>
+  <p class="section-sub">MediCloud bridges your lab machines and your reporting system. Eliminate manual data entry forever.</p>
+  <div class="features">
+    <div class="feat-card"><div class="feat-icon">🔌</div><h3>Device Integration</h3><p>Connect any lab machine via TCP/IP using ASTM protocol. Supports multiple devices simultaneously. Plug and play setup.</p><span class="feat-tag">ASTM Protocol</span></div>
+    <div class="feat-card"><div class="feat-icon">⚡</div><h3>Live Data Flow</h3><p>Results flow from machine to parser to database in real time. No delays, no manual steps, no errors. Fully automated pipeline.</p><span class="feat-tag">Real-time</span></div>
+    <div class="feat-card"><div class="feat-icon">🧠</div><h3>Smart Auto-Parser</h3><p>MediCloud Parser reads raw ASTM data and intelligently maps test codes to patient records and result types automatically.</p><span class="feat-tag">Auto Parse</span></div>
+    <div class="feat-card"><div class="feat-icon">📄</div><h3>Instant PDF Reports</h3><p>Generate professional lab reports as PDFs the moment results arrive. Download, print, or share with patients instantly.</p><span class="feat-tag">One Click</span></div>
+    <div class="feat-card"><div class="feat-icon">👥</div><h3>Patient Management</h3><p>Manage patient profiles, link test orders, and view complete result history. Search by name, ID, or test type.</p><span class="feat-tag">Full Records</span></div>
+    <div class="feat-card"><div class="feat-icon">🧪</div><h3>Simulator & Testing</h3><p>Built-in device simulator (DEMO mode) lets you test the full pipeline without a physical machine. Perfect for setup and training.</p><span class="feat-tag">DEMO Mode</span></div>
+  </div>
+</div>
+<div class="flow-section">
+  <div class="flow-inner">
+    <div class="section-label">How It Works</div>
+    <div class="section-title">From machine to report in seconds.</div>
+    <p class="section-sub">MediCloud's Live Connect pipeline eliminates every manual step between your lab machine and the final report.</p>
+    <div class="flow-diagram">
+      <div class="flow-box"><div class="flow-box-icon">🔬</div><div class="flow-box-name">Lab Machine</div><div class="flow-box-sub">Any ASTM device</div></div>
+      <div class="flow-connector">→</div>
+      <div class="flow-box"><div class="flow-box-icon">⚡</div><div class="flow-box-name">TCP Connection</div><div class="flow-box-sub">Port 5600 · Live Connect</div></div>
+      <div class="flow-connector">→</div>
+      <div class="flow-box highlight"><div class="flow-box-icon">🧠</div><div class="flow-box-name">MediCloud Parser</div><div class="flow-box-sub">Auto Parse + Save</div></div>
+      <div class="flow-connector">→</div>
+      <div class="flow-box"><div class="flow-box-icon">📄</div><div class="flow-box-name">PDF Report</div><div class="flow-box-sub">Download Instantly</div></div>
+    </div>
+  </div>
+</div>
+<div class="modules-bg">
+  <div class="modules-inner">
+    <div class="section-label">Modules</div>
+    <div class="section-title">Everything in one system.</div>
+    <p class="section-sub">From device management to patient results — all covered.</p>
+    <div class="modules-grid">
+      <div class="mod-card"><h4>🔬 Your Devices</h4><ul><li>Add and configure lab machines</li><li>TCP/IP connection settings</li><li>Online/offline status</li><li>Multi-device support</li></ul></div>
+      <div class="mod-card"><h4>👥 Patients</h4><ul><li>Patient registration</li><li>Test order management</li><li>Result history</li><li>Search and filter</li></ul></div>
+      <div class="mod-card"><h4>📊 Results</h4><ul><li>Auto-received from machines</li><li>Mapped to patient records</li><li>Normal range indicators</li><li>PDF generation</li></ul></div>
+      <div class="mod-card"><h4>⚡ Live Connect</h4><ul><li>Real-time data stream</li><li>ASTM protocol parsing</li><li>Phase 2 pipeline</li><li>Error handling and logs</li></ul></div>
+      <div class="mod-card"><h4>🧪 Simulator</h4><ul><li>Demo mode — no hardware needed</li><li>Simulate any test result</li><li>Test full pipeline</li><li>Staff training tool</li></ul></div>
+      <div class="mod-card"><h4>📄 Reports</h4><ul><li>Professional PDF layout</li><li>Lab header and branding</li><li>Instant download</li><li>Patient-ready format</li></ul></div>
+    </div>
+  </div>
+</div>
+<div class="wf-wrap">
+  <div class="wf-inner">
+    <div class="section-label">Quick Start</div>
+    <div class="section-title">Set up in 4 simple steps.</div>
+    <p class="section-sub">Follow the built-in Quick Start Guide and you are live in minutes.</p>
+    <div class="workflow">
+      <div class="wf-step"><div class="step-num">1</div><h4>Add Your Device</h4><p>Enter your lab machine IP and port. MediCloud connects automatically.</p></div>
+      <div class="wf-step"><div class="step-num">2</div><h4>Register Patient</h4><p>Add patient details and create a test order linked to the patient.</p></div>
+      <div class="wf-step"><div class="step-num">3</div><h4>Run Live Connect</h4><p>Start the TCP listener. Results flow in automatically from the machine.</p></div>
+      <div class="wf-step"><div class="step-num">4</div><h4>Download Report</h4><p>PDF report generated instantly. Print or share with the patient.</p></div>
+    </div>
+  </div>
+</div>
+<div class="cta">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <h2>Ready to automate your <span>lab?</span></h2>
+    <p>MediCloud is live. Connect your machines and eliminate manual data entry today.</p>
+    <a href="https://medicloud.mooo.com" target="_blank" class="cta-launch">🚀 Launch MediCloud →</a>
+  </div>
+</div>
+<footer><p>© 2026 <a href="../index.html">Vorpet</a> · MediCloud — Lab Middleware v5.0 · Made with ❤️ in India</p></footer>
+</body>
+</html>

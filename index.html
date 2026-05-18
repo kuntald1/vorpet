@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vorpet — Software That Works For You</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0a0a0f;--ink2:#1a1a2e;--cream:#f8f6f0;--muted:#6b7280;--border:#e5e3dc;
+  --curry:#1a3a1c;--curry-acc:#4caf50;--medi:#1e3a8a;--medi-acc:#3b82f6;
+  --attend:#065f46;--attend-acc:#60d394;--gold:#f59e0b;
+}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(248,246,240,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.logo-text{font-family:"Fraunces",serif;font-weight:800;font-size:20px;color:var(--ink);letter-spacing:-0.5px}
+.logo-text span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{text-decoration:none;color:var(--muted);font-size:14px;font-weight:400;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--ink);color:#fff;padding:9px 22px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:500;transition:opacity .2s}
+.nav-cta:hover{opacity:0.8}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px 48px 80px;position:relative;overflow:hidden}
+.hero-noise{position:absolute;inset:0;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
+.hero-orb1{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(76,175,80,0.12) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none;animation:float1 8s ease-in-out infinite}
+.hero-orb2{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,0.1) 0%,transparent 70%);bottom:-50px;left:200px;pointer-events:none;animation:float2 10s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,20px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-30px)}}
+
+/* HERO LAYOUT */
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+
+/* PRODUCT SLIDER */
+.hero-slider{position:relative;height:420px}
+.slide{position:absolute;inset:0;border-radius:20px;overflow:hidden;opacity:0;transform:translateY(16px) scale(0.97);transition:all .6s cubic-bezier(0.16,1,0.3,1);pointer-events:none}
+.slide.active{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.slide-inner{width:100%;height:100%;display:flex;flex-direction:column}
+.slide-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.slide-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.slide-logo-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.slide-status{font-size:11px;display:flex;align-items:center;gap:5px;opacity:0.7}
+.slide-status::before{content:"";width:6px;height:6px;border-radius:50%;background:#22c55e}
+.slide-body{flex:1;padding:16px 20px 20px;display:flex;flex-direction:column;gap:10px}
+.slide-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:0.5;margin-bottom:4px}
+
+/* CurryCloud slide */
+.slide-curry{background:linear-gradient(145deg,#0f2010,#1a3a1c)}
+.slide-curry .slide-logo{color:#fff}
+.slide-curry .slide-logo-icon{background:#4caf50}
+.slide-curry .slide-status{color:#fff}
+.s-table-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.s-table{border-radius:10px;padding:10px;text-align:center;border:1px solid rgba(255,255,255,0.1)}
+.s-table.free{background:rgba(76,175,80,0.15);border-color:rgba(76,175,80,0.3)}
+.s-table.occ{background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.3)}
+.s-table-num{font-size:13px;font-weight:700;color:#fff}
+.s-table-status{font-size:9px;margin-top:3px;padding:2px 6px;border-radius:100px;display:inline-block}
+.s-free{background:rgba(76,175,80,0.2);color:#86efac}
+.s-occ{background:rgba(245,158,11,0.2);color:#fcd34d}
+.s-orders{display:flex;flex-direction:column;gap:6px}
+.s-order{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
+.s-order-name{font-size:12px;color:#fff;font-weight:500}
+.s-badge{font-size:9px;padding:3px 8px;border-radius:100px;font-weight:700}
+.s-kot{background:rgba(59,130,246,0.2);color:#93c5fd}
+.s-billed{background:rgba(76,175,80,0.2);color:#86efac}
+.s-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.s-stat{background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center}
+.s-stat-num{font-size:16px;font-weight:700;color:#fff}
+.s-stat-lbl{font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px}
+
+/* MediCloud slide */
+.slide-medi{background:linear-gradient(145deg,#0a0e1a,#1a1d27)}
+.slide-medi .slide-logo{color:#fff}
+.slide-medi .slide-logo-icon{background:#f97316}
+.slide-medi .slide-status{color:#fff}
+.s-flow{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.s-flow-node{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 8px;text-align:center}
+.s-flow-node.hl{background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.3)}
+.s-flow-icon{font-size:16px;margin-bottom:4px}
+.s-flow-name{font-size:9px;color:rgba(255,255,255,0.7);font-weight:600}
+.s-flow-sub{font-size:8px;color:rgba(255,255,255,0.35)}
+.s-flow-arrow{color:rgba(255,255,255,0.2);font-size:12px;flex-shrink:0}
+.s-patient-list{display:flex;flex-direction:column;gap:6px}
+.s-patient{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between}
+.s-patient-name{font-size:12px;color:#fff;font-weight:500}
+.s-patient-detail{font-size:10px;color:rgba(255,255,255,0.4);margin-top:1px}
+.s-result{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:600}
+.s-positive{background:rgba(34,197,94,0.2);color:#86efac}
+.s-pending{background:rgba(249,115,22,0.2);color:#fdba74}
+
+/* AttendPro slide */
+.slide-attend{background:linear-gradient(145deg,#0a1628,#1e3a8a)}
+.slide-attend .slide-logo{color:#fff}
+.slide-attend .slide-logo-icon{background:#60d394}
+.slide-attend .slide-status{color:#fff}
+.s-emp-list{display:flex;flex-direction:column;gap:6px}
+.s-emp{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:9px 12px;display:flex;align-items:center;gap:10px}
+.s-emp-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.s-emp-name{font-size:12px;color:#fff;font-weight:500}
+.s-emp-role{font-size:10px;color:rgba(255,255,255,0.4);margin-top:1px}
+.s-check{margin-left:auto;font-size:10px;padding:2px 8px;border-radius:100px;font-weight:600}
+.s-in{background:rgba(96,211,148,0.2);color:#6ee7b7}
+.s-out{background:rgba(239,68,68,0.2);color:#fca5a5}
+.s-leave{background:rgba(245,158,11,0.2);color:#fcd34d}
+
+/* SLIDER DOTS */
+.slider-dots{display:flex;gap:8px;margin-top:16px;justify-content:center}
+.slider-dot{width:24px;height:4px;border-radius:2px;background:var(--border);cursor:pointer;transition:all .3s}
+.slider-dot.active{background:var(--ink);width:36px}
+.slider-label{text-align:center;margin-top:10px;font-size:12px;color:var(--muted);font-weight:500;min-height:20px;transition:all .3s}
+
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);padding:7px 16px;border-radius:100px;font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin-bottom:32px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.hero-eyebrow::before{content:"";width:6px;height:6px;background:var(--gold);border-radius:50%}
+h1{font-family:"Fraunces",serif;font-size:clamp(48px,7vw,88px);font-weight:800;line-height:1.0;letter-spacing:-3px;color:var(--ink);margin-bottom:28px;max-width:800px}
+h1 .line2{color:var(--muted);font-weight:400}
+.hero-desc{font-size:18px;color:var(--muted);line-height:1.7;max-width:520px;margin-bottom:48px;font-weight:300}
+.hero-scroll{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* PRODUCT CARDS IN HERO */
+.hero-cards{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:48px}
+.hero-card{display:flex;align-items:center;gap:12px;padding:14px 22px;border-radius:14px;border:1.5px solid;font-size:14px;font-weight:600;text-decoration:none;transition:all .25s;cursor:pointer;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.hero-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.12)}
+.hc-curry{border-color:rgba(76,175,80,0.35);color:var(--curry)}
+.hc-medi{border-color:rgba(59,130,246,0.35);color:var(--medi)}
+.hc-attend{border-color:rgba(96,211,148,0.4);color:var(--attend)}
+.hc-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.hci-curry{background:rgba(76,175,80,0.1)}
+.hci-medi{background:rgba(59,130,246,0.1)}
+.hci-attend{background:rgba(96,211,148,0.12)}
+.hc-text{}
+.hc-name{font-size:14px;font-weight:700;line-height:1.2}
+.hc-sub{font-size:11px;font-weight:400;opacity:0.6;margin-top:1px}
+.hc-arrow{margin-left:4px;font-size:16px;opacity:0.5;transition:all .2s}
+.hero-card:hover .hc-arrow{opacity:1;transform:translateX(3px)}
+
+/* SECTION BASE */
+.section{padding:100px 48px;max-width:1200px;margin:0 auto}
+.section-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.section-title{font-family:"Fraunces",serif;font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-2px;line-height:1.1;margin-bottom:20px}
+.section-sub{font-size:17px;color:var(--muted);line-height:1.7;font-weight:300;max-width:560px}
+
+
+/* PRODUCT SHOWCASE — PetPooja style alternating sections */
+.showcase-wrap{padding:0;background:var(--cream)}
+.showcase-section{padding:80px 48px;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.showcase-section.reverse{direction:rtl}
+.showcase-section.reverse > *{direction:ltr}
+.showcase-text{}
+.showcase-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px}
+.st-curry{background:rgba(76,175,80,0.1);color:#1a3a1c;border:1px solid rgba(76,175,80,0.2)}
+.st-medi{background:rgba(249,115,22,0.1);color:#9a3412;border:1px solid rgba(249,115,22,0.2)}
+.st-attend{background:rgba(96,211,148,0.12);color:#065f46;border:1px solid rgba(96,211,148,0.3)}
+.showcase-title{font-family:"Fraunces",serif;font-size:clamp(28px,3.5vw,42px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px;color:var(--ink)}
+.showcase-desc{font-size:16px;color:var(--muted);line-height:1.8;font-weight:300;margin-bottom:28px}
+.showcase-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px}
+.pill{display:flex;align-items:center;gap:7px;padding:8px 16px;background:#fff;border:1px solid var(--border);border-radius:100px;font-size:13px;font-weight:500;color:var(--ink)}
+.pill-icon{font-size:15px}
+.showcase-cta{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;transition:all .2s}
+.sc-curry{background:var(--curry);color:#fff}.sc-curry:hover{background:#2d6a30;transform:translateY(-2px)}
+.sc-medi{background:#9a3412;color:#fff}.sc-medi:hover{background:#7c2d12;transform:translateY(-2px)}
+.sc-attend{background:#065f46;color:#fff}.sc-attend:hover{background:#064e3b;transform:translateY(-2px)}
+.showcase-visual{position:relative}
+/* CurryCloud visual */
+.curry-mockup{background:linear-gradient(145deg,#0f2010,#1e3d14);border-radius:20px;padding:24px;box-shadow:0 32px 80px rgba(26,58,28,0.3)}
+.mock-bar{display:flex;align-items:center;gap:8px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.mock-dots{display:flex;gap:5px}
+.mock-dot{width:10px;height:10px;border-radius:50%}
+.mock-title-sm{font-size:11px;color:rgba(255,255,255,0.4);margin-left:auto;font-weight:500}
+.floor-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.ftable{border-radius:10px;padding:12px 8px;text-align:center;border:1.5px solid}
+.ft-free{background:rgba(76,175,80,0.12);border-color:rgba(76,175,80,0.3)}
+.ft-occ{background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.3)}
+.ft-bill{background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.3)}
+.ft-num{font-size:13px;font-weight:700;color:#fff}
+.ft-sta{font-size:9px;margin-top:3px;padding:2px 6px;border-radius:100px;display:inline-block;font-weight:600}
+.fts-free{background:rgba(76,175,80,0.2);color:#86efac}
+.fts-occ{background:rgba(245,158,11,0.2);color:#fcd34d}
+.fts-bill{background:rgba(59,130,246,0.2);color:#93c5fd}
+.order-strip{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.os-left{}
+.os-name{font-size:12px;color:#fff;font-weight:600}
+.os-items{font-size:10px;color:rgba(255,255,255,0.45);margin-top:2px}
+.os-amount{font-family:"Fraunces",serif;font-size:15px;font-weight:700;color:#4caf50}
+.curry-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.cs-box{background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center}
+.cs-num{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:#fff}
+.cs-lbl{font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px}
+/* MediCloud visual */
+.medi-mockup{background:linear-gradient(145deg,#0a0e1a,#1a1d27);border-radius:20px;padding:24px;box-shadow:0 32px 80px rgba(15,17,27,0.4)}
+.medi-header-bar{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.medi-logo-box{width:32px;height:32px;background:#f97316;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.medi-title-bar{font-size:13px;font-weight:700;color:#fff}
+.medi-sub-bar{font-size:10px;color:rgba(255,255,255,0.4)}
+.online-badge{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:10px;color:#22c55e;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);padding:3px 10px;border-radius:100px}
+.medi-flow{display:flex;align-items:center;gap:6px;margin-bottom:16px;padding:14px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.06)}
+.mf-node{flex:1;text-align:center;padding:10px 6px;border-radius:8px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.04)}
+.mf-node.active{background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.3)}
+.mf-icon{font-size:18px;margin-bottom:4px}
+.mf-name{font-size:10px;font-weight:600;color:rgba(255,255,255,0.8)}
+.mf-sub{font-size:8px;color:rgba(255,255,255,0.3);margin-top:2px}
+.mf-arrow{color:rgba(255,255,255,0.2);font-size:14px;flex-shrink:0}
+.result-row{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.rr-name{font-size:12px;color:#fff;font-weight:500}
+.rr-test{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px}
+.rr-badge{font-size:10px;padding:3px 10px;border-radius:100px;font-weight:600}
+.rb-done{background:rgba(34,197,94,0.15);color:#6ee7b7}
+.rb-proc{background:rgba(249,115,22,0.15);color:#fdba74}
+.medi-bottom-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+/* AttendPro visual */
+.attend-mockup{background:linear-gradient(145deg,#0a1628,#1e3a8a);border-radius:20px;padding:24px;box-shadow:0 32px 80px rgba(10,22,40,0.4)}
+.attend-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.attend-logo-row{display:flex;align-items:center;gap:10px}
+.attend-logo-box{width:32px;height:32px;background:#60d394;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#065f46;font-weight:700}
+.attend-title{font-size:13px;font-weight:700;color:#fff}
+.attend-sub{font-size:10px;color:rgba(255,255,255,0.4)}
+.today-rate{text-align:right}
+.rate-num{font-family:"Fraunces",serif;font-size:22px;font-weight:800;color:#60d394}
+.rate-lbl{font-size:9px;color:rgba(255,255,255,0.4)}
+.emp-row{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:12px;margin-bottom:8px;transition:all .3s}
+.emp-row:hover{background:rgba(255,255,255,0.09)}
+.emp-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.emp-info{flex:1}
+.emp-name{font-size:12px;color:#fff;font-weight:600}
+.emp-role{font-size:10px;color:rgba(255,255,255,0.4);margin-top:1px}
+.emp-time{font-size:11px;color:rgba(255,255,255,0.6);text-align:right}
+.emp-status{font-size:9px;padding:2px 8px;border-radius:100px;font-weight:700;display:block;margin-bottom:2px}
+.es-in{background:rgba(96,211,148,0.2);color:#6ee7b7}
+.es-leave{background:rgba(245,158,11,0.2);color:#fcd34d}
+.es-out{background:rgba(239,68,68,0.2);color:#fca5a5}
+.attend-bottom{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.ab-box{background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center}
+.ab-num{font-family:"Fraunces",serif;font-size:16px;font-weight:700;color:#fff}
+.ab-lbl{font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px}
+/* Divider */
+.showcase-divider{height:1px;background:var(--border);max-width:1200px;margin:0 auto}
+@media(max-width:900px){
+  .showcase-section{grid-template-columns:1fr;gap:40px;padding:60px 24px}
+  .showcase-section.reverse{direction:ltr}
+}
+
+/* PRODUCTS GRID */
+.products-wrap{padding:80px 48px;background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.products-inner{max-width:1200px;margin:0 auto}
+.products-header{text-align:center;margin-bottom:72px}
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border)}
+.product-card{background:#fff;padding:52px 40px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:all .3s;cursor:pointer}
+.product-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px}
+.card-curry::before{background:linear-gradient(90deg,var(--curry),var(--curry-acc))}
+.card-medi::before{background:linear-gradient(90deg,var(--medi),var(--medi-acc))}
+.card-attend::before{background:linear-gradient(90deg,#065f46,var(--attend-acc))}
+.product-card:hover{transform:translateY(-4px);box-shadow:0 24px 60px rgba(0,0,0,0.1);z-index:2}
+.product-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:28px}
+.icon-curry{background:rgba(76,175,80,0.1)}
+.icon-medi{background:rgba(59,130,246,0.1)}
+.icon-attend{background:rgba(96,211,148,0.1)}
+.product-tag{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:100px;margin-bottom:16px}
+.tag-curry{background:rgba(76,175,80,0.1);color:var(--curry)}
+.tag-medi{background:rgba(59,130,246,0.1);color:var(--medi)}
+.tag-attend{background:rgba(96,211,148,0.1);color:#065f46}
+.product-name{font-family:"Fraunces",serif;font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:12px;color:var(--ink)}
+.product-desc{font-size:15px;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:32px;flex:1}
+.product-features{display:flex;flex-direction:column;gap:8px;margin-bottom:36px}
+.feat{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink)}
+.feat-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dot-curry{background:var(--curry-acc)}
+.dot-medi{background:var(--medi-acc)}
+.dot-attend{background:var(--attend-acc)}
+.product-link{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;text-decoration:none;transition:gap .2s}
+.link-curry{color:var(--curry)}
+.link-medi{color:var(--medi)}
+.link-attend{color:#065f46}
+.product-link:hover{gap:14px}
+
+
+/* WHY CARD ICONS */
+.why-card{position:relative}
+.why-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.why-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.wi-1{background:rgba(245,158,11,0.1)}
+.wi-2{background:rgba(76,175,80,0.1)}
+.wi-3{background:rgba(59,130,246,0.1)}
+.wi-4{background:rgba(239,68,68,0.1)}
+.wi-5{background:rgba(168,85,247,0.1)}
+.wi-6{background:rgba(96,211,148,0.1)}
+
+/* WHY SECTION */
+.why-wrap{padding:100px 48px;background:var(--cream)}
+.why-inner{max-width:1200px;margin:0 auto}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:56px}
+.why-card{padding:36px;border-radius:20px;border:1px solid var(--border);background:#fff;transition:all .3s}
+.why-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.08)}
+.why-num{font-family:"Fraunces",serif;font-size:36px;font-weight:900;color:#b0a898;line-height:1;margin-bottom:0;position:relative;display:inline-block}.why-num::after{content:"";display:block;width:28px;height:2px;background:var(--gold);margin-top:6px;margin-bottom:16px;border-radius:1px}
+.why-title{font-family:"Fraunces",serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--ink)}
+.why-desc{font-size:14px;color:var(--muted);line-height:1.7;font-weight:300}
+
+/* STATS STRIP */
+.stats-strip{background:var(--ink);padding:0 48px}
+.stats-strip-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.strip-stat{padding:40px 32px;border-right:1px solid rgba(255,255,255,0.08);position:relative;overflow:hidden;transition:background .3s}
+.strip-stat:last-child{border-right:none}
+.strip-stat:hover{background:rgba(255,255,255,0.03)}
+.strip-stat::before{content:"";position:absolute;bottom:0;left:32px;right:32px;height:2px;background:transparent;transition:background .3s}
+.strip-stat:nth-child(1)::before{background:var(--curry-acc)}
+.strip-stat:nth-child(2)::before{background:#f97316}
+.strip-stat:nth-child(3)::before{background:var(--attend-acc)}
+.strip-stat:nth-child(4)::before{background:var(--gold)}
+.strip-num{font-family:"Fraunces",serif;font-size:48px;font-weight:900;color:#fff;line-height:1;margin-bottom:6px;letter-spacing:-2px}
+.strip-label{font-size:13px;color:rgba(255,255,255,0.45);font-weight:400;line-height:1.5}
+.strip-product{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:8px;display:inline-flex;align-items:center;gap:6px}
+.sp-1{color:var(--curry-acc)}.sp-2{color:#f97316}.sp-3{color:var(--attend-acc)}.sp-4{color:var(--gold)}
+.marquee-dot{width:8px;height:8px;border-radius:50%}
+
+/* ABOUT */
+.about-wrap{padding:100px 48px;background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.about-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:80px 80px}
+.about-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1}
+.about-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.about-title{font-family:"Fraunces",serif;font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-2px;line-height:1.1;margin-bottom:24px;color:#fff}
+.about-desc{font-size:16px;color:rgba(255,255,255,0.6);line-height:1.8;font-weight:300;margin-bottom:40px}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.astat{border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:24px}
+.astat-num{font-family:"Fraunces",serif;font-size:36px;font-weight:800;color:#fff;margin-bottom:4px}
+.astat-label{font-size:13px;color:rgba(255,255,255,0.5);font-weight:300}
+.about-right{display:flex;flex-direction:column;gap:16px}
+.value-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;transition:all .3s}
+.value-card:hover{background:rgba(255,255,255,0.07);transform:translateX(8px)}
+.value-icon{font-size:28px;margin-bottom:12px}
+.value-title{font-family:"Fraunces",serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:8px}
+.value-desc{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.6;font-weight:300}
+
+/* CONTACT SECTION */
+.contact-wrap{padding:100px 48px;background:var(--cream);border-top:1px solid var(--border)}
+.contact-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.contact-form{background:#fff;border-radius:20px;padding:48px;border:1px solid var(--border);box-shadow:0 4px 24px rgba(0,0,0,0.06)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.form-group label{font-size:13px;font-weight:600;color:var(--ink)}
+.form-group input,.form-group select,.form-group textarea{padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;font-family:"DM Sans",sans-serif;font-size:14px;color:var(--ink);background:#fff;outline:none;transition:border .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold)}
+.form-group textarea{resize:vertical;min-height:120px}
+.form-submit{width:100%;background:var(--ink);color:#fff;padding:14px;border-radius:8px;border:none;font-family:"DM Sans",sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.form-submit:hover{background:var(--ink2);transform:translateY(-1px)}
+.contact-info{padding-top:8px}
+.contact-info-title{font-family:"Fraunces",serif;font-size:clamp(28px,3vw,40px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px}
+.contact-info-sub{font-size:16px;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:40px}
+.contact-items{display:flex;flex-direction:column;gap:20px}
+.contact-item{display:flex;align-items:flex-start;gap:16px}
+.ci-icon{width:44px;height:44px;border-radius:10px;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ci-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px}
+.ci-value{font-size:15px;font-weight:500;color:var(--ink)}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:14px 28px;border-radius:100px;font-size:14px;font-weight:500;transition:all .4s;opacity:0;z-index:999}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* CTA */
+.cta-wrap{padding:120px 48px;text-align:center;position:relative;overflow:hidden}
+.cta-orb{position:absolute;width:800px;height:800px;background:radial-gradient(circle,rgba(245,158,11,0.08) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.cta-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.cta-title{font-family:"Fraunces",serif;font-size:clamp(36px,5vw,64px);font-weight:800;letter-spacing:-3px;line-height:1.05;margin-bottom:24px}
+.cta-title span{color:var(--gold)}
+.cta-sub{font-size:18px;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:48px}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn-dark{background:var(--ink);color:#fff;padding:16px 32px;border-radius:10px;text-decoration:none;font-size:15px;font-weight:600;transition:all .2s;display:inline-flex;align-items:center;gap:10px}
+.btn-dark:hover{opacity:0.85;transform:translateY(-2px)}
+.btn-light{border:1.5px solid var(--border);color:var(--ink);padding:16px 32px;border-radius:10px;text-decoration:none;font-size:15px;font-weight:500;transition:all .2s;display:inline-flex;align-items:center;gap:10px;background:#fff}
+.btn-light:hover{border-color:var(--ink);transform:translateY(-2px)}
+
+/* FOOTER */
+footer{background:var(--ink);color:rgba(255,255,255,0.4);padding:48px}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px}
+.footer-logo{font-family:"Fraunces",serif;font-weight:800;font-size:18px;color:#fff;text-decoration:none}
+.footer-logo span{color:var(--gold)}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap}
+.footer-links a{color:rgba(255,255,255,0.4);text-decoration:none;font-size:13px;transition:color .2s}
+.footer-links a:hover{color:#fff}
+.footer-copy{font-size:12px}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(0.16,1,0.3,1)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.delay-1{transition-delay:.1s}.delay-2{transition-delay:.2s}.delay-3{transition-delay:.3s}
+
+@media(max-width:900px){
+  nav{padding:0 24px}.nav-links{display:none}
+  .why-intro-grid{grid-template-columns:1fr!important}
+  .hero{padding:100px 24px 60px}
+  .hero-cards{flex-direction:column}.hero-right{display:none}
+  .products-grid{grid-template-columns:1fr}
+  .why-grid{grid-template-columns:1fr}
+  .about-inner,.contact-inner{grid-template-columns:1fr;gap:48px}
+  .section,.products-wrap,.why-wrap,.about-wrap,.contact-wrap,.cta-wrap{padding:60px 24px}
+  footer{padding:32px 24px}.footer-inner{flex-direction:column;align-items:flex-start}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">
+<svg width="22" height="20" viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 13 Q13 7 16 2" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M26 11 Q23 4 26 0" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M36 13 Q33 7 36 2" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><ellipse cx="26" cy="18" rx="20" ry="5" fill="#f59e0b"/><path d="M10 16 Q16 11 21 16 Q26 21 31 16 Q36 11 42 16" stroke="#111" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M6 18 Q6 40 26 40 Q46 40 46 18Z" fill="#f59e0b"/><path d="M11 23 Q10 33 13 38" stroke="#fde68a" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/></svg>
+    </div>
+    <div class="logo-text">Vor<span>pet</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="#products">Products</a>
+    <a href="#why">Why Us</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a href="#contact" class="nav-cta">Get in Touch</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-orb1"></div>
+  <div class="hero-orb2"></div>
+  <div class="hero-inner"><div class="hero-left">
+    <div class="hero-eyebrow">&#127470;&#127475; Made in India &middot; Built for Bharat</div>
+    <h1>Software that <br><span class="line2">actually works.</span></h1>
+    <p class="hero-desc">We build practical, powerful software for Indian businesses — restaurants, clinics, and workplaces. No complexity, just results.</p>
+    <div class="hero-cards">
+      <a href="currycloud/index.html" class="hero-card" style="border-color:rgba(34,197,94,0.4);background:#f0fdf4;color:#14532d">
+        <div class="hc-icon" style="background:#dcfce7;width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"/><circle cx="7" cy="6" r="2" fill="#16a34a"/><circle cx="12" cy="12" r="2" fill="#16a34a"/><circle cx="17" cy="18" r="2" fill="#16a34a"/></svg>
+        </div>
+        <div class="hc-text">
+          <div class="hc-name" style="color:#14532d">CurryCloud</div>
+          <div class="hc-sub" style="color:#16a34a">Restaurant Management</div>
+        </div>
+        <span style="color:#16a34a;font-size:16px;opacity:0.7">&#8250;</span>
+      </a>
+      <a href="medicloud/index.html" class="hero-card" style="border-color:rgba(249,115,22,0.4);background:#0f1117;color:#fff">
+        <div class="hc-icon" style="background:#f97316;width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="hc-text">
+          <div class="hc-name" style="color:#fff">MediCloud</div>
+          <div class="hc-sub" style="color:#fb923c">Lab Middleware</div>
+        </div>
+        <span style="color:#f97316;font-size:16px;opacity:0.7">&#8250;</span>
+      </a>
+      <a href="attendpro/index.html" class="hero-card" style="border-color:rgba(59,130,246,0.4);background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff">
+        <div class="hc-icon" style="background:rgba(255,255,255,0.15);width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#fff" stroke-width="2"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M16 11l2 2 4-4" stroke="#60d394" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="hc-text">
+          <div class="hc-name" style="color:#fff">AttendPro</div>
+          <div class="hc-sub" style="color:#86efac">HR &amp; Attendance</div>
+        </div>
+        <span style="color:#86efac;font-size:16px;opacity:0.7">&#8250;</span>
+      </a>
+    </div>
+    <div class="hero-scroll">
+      <span>&#8595;</span>
+      <span>Scroll to explore</span>
+    </div>
+  </div>
+
+  <!-- HERO SLIDER -->
+  <div class="hero-right">
+    <div class="hero-slider">
+
+      <!-- CurryCloud Slide -->
+      <div class="slide slide-curry active">
+        <div class="slide-header">
+          <div class="slide-logo"><div class="slide-logo-icon">&#127843;</div>CurryCloud</div>
+          <div class="slide-status">Live</div>
+        </div>
+        <div class="slide-body">
+          <div class="slide-title">Table Overview</div>
+          <div class="s-table-grid">
+            <div class="s-table free"><div class="s-table-num">T-1</div><div class="s-table-status s-free">Free</div></div>
+            <div class="s-table occ"><div class="s-table-num">T-2</div><div class="s-table-status s-occ">Occupied</div></div>
+            <div class="s-table free"><div class="s-table-num">T-3</div><div class="s-table-status s-free">Free</div></div>
+            <div class="s-table occ"><div class="s-table-num">T-4</div><div class="s-table-status s-occ">Occupied</div></div>
+            <div class="s-table free"><div class="s-table-num">T-5</div><div class="s-table-status s-free">Free</div></div>
+            <div class="s-table occ"><div class="s-table-num">T-6</div><div class="s-table-status s-occ">Occupied</div></div>
+          </div>
+          <div class="slide-title" style="margin-top:6px">Stock — Auto-deducted after billing</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="background:rgba(255,255,255,0.06);border-radius:7px;padding:6px 10px;display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:11px;color:#fff">🥚 Eggs</span>
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="font-size:9px;color:rgba(255,255,255,0.35)">20.000</span>
+                <span style="font-size:9px;color:#f87171">−2</span>
+                <span style="font-size:11px;font-weight:700;color:#4ade80">18.000</span>
+              </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.06);border-radius:7px;padding:6px 10px;display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:11px;color:#fff">🌾 Maida</span>
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="font-size:9px;color:rgba(255,255,255,0.35)">20.000</span>
+                <span style="font-size:9px;color:#f87171">−0.05</span>
+                <span style="font-size:11px;font-weight:700;color:#4ade80">19.950</span>
+              </div>
+            </div>
+          </div>
+          <div class="s-stats-row">
+            <div class="s-stat"><div class="s-stat-num">&#8377;8,240</div><div class="s-stat-lbl">Today</div></div>
+            <div class="s-stat"><div class="s-stat-num">34</div><div class="s-stat-lbl">Orders</div></div>
+            <div class="s-stat"><div class="s-stat-num">Auto</div><div class="s-stat-lbl">Stock ↓</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MediCloud Slide -->
+      <div class="slide slide-medi">
+        <div class="slide-header">
+          <div class="slide-logo"><div class="slide-logo-icon">&#128299;</div>MediCloud</div>
+          <div class="slide-status">System Online</div>
+        </div>
+        <div class="slide-body">
+          <div class="slide-title">Live Data Flow</div>
+          <div class="s-flow">
+            <div class="s-flow-node"><div class="s-flow-icon">&#128300;</div><div class="s-flow-name" style="color:#f97316">Lab Machine</div><div class="s-flow-sub">ASTM</div></div>
+            <div class="s-flow-arrow">&#8594;</div>
+            <div class="s-flow-node"><div class="s-flow-icon">&#9889;</div><div class="s-flow-name" style="color:#f97316">TCP</div><div class="s-flow-sub">Port 5600</div></div>
+            <div class="s-flow-arrow">&#8594;</div>
+            <div class="s-flow-node hl"><div class="s-flow-icon">&#129504;</div><div class="s-flow-name">Parser</div><div class="s-flow-sub">Auto Parse</div></div>
+            <div class="s-flow-arrow">&#8594;</div>
+            <div class="s-flow-node"><div class="s-flow-icon">&#128196;</div><div class="s-flow-name" style="color:#22c55e">PDF</div><div class="s-flow-sub">Instant</div></div>
+          </div>
+          <div class="slide-title">Recent Results</div>
+          <div class="s-patient-list">
+            <div class="s-patient"><div><div class="s-patient-name">Rajesh Kumar</div><div class="s-patient-detail">CBC · Token #1</div></div><span class="s-result s-positive">&#10003; Done</span></div>
+            <div class="s-patient"><div><div class="s-patient-name">Priya Sharma</div><div class="s-patient-detail">Lipid Panel · Token #2</div></div><span class="s-result s-pending">Processing</span></div>
+            <div class="s-patient"><div><div class="s-patient-name">Amit Das</div><div class="s-patient-detail">Blood Sugar · Token #3</div></div><span class="s-result s-positive">&#10003; Done</span></div>
+          </div>
+          <div class="s-stats-row">
+            <div class="s-stat"><div class="s-stat-num">7</div><div class="s-stat-lbl">Devices</div></div>
+            <div class="s-stat"><div class="s-stat-num">4</div><div class="s-stat-lbl">Patients</div></div>
+            <div class="s-stat"><div class="s-stat-num">2</div><div class="s-stat-lbl">Results</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AttendPro Slide -->
+      <div class="slide slide-attend">
+        <div class="slide-header">
+          <div class="slide-logo"><div class="slide-logo-icon">&#8987;</div>AttendPro</div>
+          <div class="slide-status">All systems live</div>
+        </div>
+        <div class="slide-body">
+          <div class="slide-title">Today's Attendance</div>
+          <div class="s-emp-list">
+            <div class="s-emp"><div class="s-emp-avatar" style="background:#4caf50">KD</div><div><div class="s-emp-name">Kuntal Das</div><div class="s-emp-role">Software Engineer</div></div><span class="s-check s-in">&#10003; In 9:02</span></div>
+            <div class="s-emp"><div class="s-emp-avatar" style="background:#3b82f6">RS</div><div><div class="s-emp-name">Rahul Sharma</div><div class="s-emp-role">HR Manager</div></div><span class="s-check s-in">&#10003; In 9:15</span></div>
+            <div class="s-emp"><div class="s-emp-avatar" style="background:#f59e0b">PD</div><div><div class="s-emp-name">Priya Dey</div><div class="s-emp-role">Accountant</div></div><span class="s-check s-leave">On Leave</span></div>
+          </div>
+          <div class="slide-title" style="margin-top:8px">Payroll — April 2026</div>
+          <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;font-size:11px;color:rgba(255,255,255,0.8);display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+            <span>Kuntal Das · 4/22 days <span style="color:#f87171">(-18 LOP)</span></span>
+            <span style="color:#86efac;font-weight:600">₹3,582 ✓ Paid</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px 10px;font-size:10px;color:rgba(255,255,255,0.5);display:flex;justify-content:space-between">
+            <span>⏱ OT: 3.2h approved</span>
+            <span style="color:#fcd34d">+₹1,514.06</span>
+          </div>
+          <div class="s-stats-row" style="margin-top:8px">
+            <div class="s-stat"><div class="s-stat-num">91%</div><div class="s-stat-lbl">Attendance</div></div>
+            <div class="s-stat"><div class="s-stat-num">Auto</div><div class="s-stat-lbl">Payslip PDF</div></div>
+            <div class="s-stat"><div class="s-stat-num">OT</div><div class="s-stat-lbl">Detected</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- DOTS -->
+    <div class="slider-dots">
+      <div class="slider-dot active" onclick="goSlide(0)"></div>
+      <div class="slider-dot" onclick="goSlide(1)"></div>
+      <div class="slider-dot" onclick="goSlide(2)"></div>
+    </div>
+    <div class="slider-label" id="sliderLabel">&#127843; CurryCloud — Restaurant Management</div>
+  </div>
+
+</div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stats-strip-inner">
+    <div class="strip-stat">
+      <div class="strip-num">6+</div>
+      <div class="strip-label">POS, KOT, billing, inventory, stock ledger & multi-branch — all in CurryCloud</div>
+      <div class="strip-product sp-1">&#127843; CurryCloud</div>
+    </div>
+    <div class="strip-stat">
+      <div class="strip-num">0ms</div>
+      <div class="strip-label">Manual entry in MediCloud — lab results flow automatically</div>
+      <div class="strip-product sp-2">&#128299; MediCloud</div>
+    </div>
+    <div class="strip-stat">
+      <div class="strip-num">100%</div>
+      <div class="strip-label">Face recognition → OT detection → PDF payslip → auto email — all in AttendPro</div>
+      <div class="strip-product sp-3">&#8987; AttendPro</div>
+    </div>
+    <div class="strip-stat">
+      <div class="strip-num">&#8377;0</div>
+      <div class="strip-label">Setup cost across all products — start using today</div>
+      <div class="strip-product sp-4">&#127470;&#127475; Vorpet</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="products-wrap" id="products">
+  <div class="products-inner">
+    <div class="products-header fade-up">
+      <div class="section-label">Our Products</div>
+      <div class="section-title">Three products. One mission.</div>
+      <p class="section-sub" style="margin:0 auto">Built from the ground up for Indian businesses. Affordable, reliable, and designed to just work.</p>
+    </div>
+    <div class="products-grid">
+
+      <!-- CurryCloud Card -->
+      <div class="product-card card-curry fade-up delay-1" onclick="window.location.href='currycloud/index.html'">
+        <!-- Mini app preview -->
+        <div style="background:#f0fdf4;border-radius:12px;padding:16px;margin-bottom:24px;border:1px solid #bbf7d0">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:28px;height:28px;background:#14532d;border-radius:7px;display:flex;align-items:center;justify-content:center">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#4caf50" stroke-width="2.5" stroke-linecap="round"/></svg>
+              </div>
+              <span style="font-size:12px;font-weight:700;color:#14532d">CurryCloud POS</span>
+            </div>
+            <span style="font-size:10px;background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:100px;font-weight:600">● Live</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px">
+            <div style="background:#fff;border:1px solid #bbf7d0;border-radius:7px;padding:8px;text-align:center"><div style="font-size:11px;font-weight:700;color:#14532d">T-1</div><div style="font-size:9px;background:#fef3c7;color:#92400e;border-radius:100px;padding:1px 4px;margin-top:2px">Busy</div></div>
+            <div style="background:#fff;border:1px solid #bbf7d0;border-radius:7px;padding:8px;text-align:center"><div style="font-size:11px;font-weight:700;color:#14532d">T-2</div><div style="font-size:9px;background:#dcfce7;color:#16a34a;border-radius:100px;padding:1px 4px;margin-top:2px">Free</div></div>
+            <div style="background:#fff;border:1px solid #bbf7d0;border-radius:7px;padding:8px;text-align:center"><div style="font-size:11px;font-weight:700;color:#14532d">T-3</div><div style="font-size:9px;background:#dbeafe;color:#1e40af;border-radius:100px;padding:1px 4px;margin-top:2px">Billed</div></div>
+          </div>
+          <div style="background:#fff;border:1px solid #bbf7d0;border-radius:7px;padding:8px;display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:11px;color:#14532d;font-weight:500">#042 · Butter Chicken, Naan</div>
+            <div style="font-size:10px;background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:100px;font-weight:600">KOT</div>
+          </div>
+        </div>
+        <div class="product-tag tag-curry">&#9679; Restaurant</div>
+        <div class="product-name">CurryCloud</div>
+        <p class="product-desc">Complete restaurant management — POS, kitchen display, billing, inventory control, and multi-branch stock management. Offline-first, built for Indian dining.</p>
+        <div class="product-features">
+          <div class="feat"><span class="feat-dot dot-curry"></span>Table &amp; order management</div>
+          <div class="feat"><span class="feat-dot dot-curry"></span>KOT &amp; kitchen display</div>
+          <div class="feat"><span class="feat-dot dot-curry"></span>Inventory &amp; stock control</div>
+          <div class="feat"><span class="feat-dot dot-curry"></span>Multi-branch &amp; offline</div>
+        </div>
+        <a href="currycloud/index.html" class="product-link link-curry">Learn More &#8594;</a>
+      </div>
+
+      <!-- MediCloud Card -->
+      <div class="product-card card-medi fade-up delay-2" onclick="window.location.href='medicloud/index.html'">
+        <div style="background:#0f1117;border-radius:12px;padding:16px;margin-bottom:24px;border:1px solid rgba(249,115,22,0.25)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:28px;height:28px;background:#f97316;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px">🧪</div>
+              <span style="font-size:12px;font-weight:700;color:#fff">MediCloud</span>
+            </div>
+            <span style="font-size:10px;background:rgba(34,197,94,0.15);color:#22c55e;padding:2px 8px;border-radius:100px;font-weight:600">● Online</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:10px">
+            <div style="flex:1;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.2);border-radius:6px;padding:7px;text-align:center"><div style="font-size:12px">🔬</div><div style="font-size:8px;color:#f97316;font-weight:600;margin-top:2px">Machine</div></div>
+            <div style="color:rgba(255,255,255,0.3);font-size:10px">→</div>
+            <div style="flex:1;background:#f97316;border-radius:6px;padding:7px;text-align:center"><div style="font-size:12px">🧠</div><div style="font-size:8px;color:#fff;font-weight:600;margin-top:2px">Parser</div></div>
+            <div style="color:rgba(255,255,255,0.3);font-size:10px">→</div>
+            <div style="flex:1;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.2);border-radius:6px;padding:7px;text-align:center"><div style="font-size:12px">📄</div><div style="font-size:8px;color:#22c55e;font-weight:600;margin-top:2px">PDF</div></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:8px;display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:11px;color:#fff;font-weight:500">Rajesh Kumar · CBC</div><div style="font-size:9px;color:rgba(255,255,255,0.4)">Token #1 · Dr. Sharma</div></div>
+            <div style="font-size:10px;background:rgba(34,197,94,0.15);color:#22c55e;padding:2px 7px;border-radius:100px;font-weight:600">✓ Done</div>
+          </div>
+        </div>
+        <div class="product-tag tag-medi">&#9679; Lab Software</div>
+        <div class="product-name">MediCloud</div>
+        <p class="product-desc">Lab middleware that connects machines to your system. Auto-parse results and generate PDF reports instantly.</p>
+        <div class="product-features">
+          <div class="feat"><span class="feat-dot dot-medi"></span>ASTM device integration</div>
+          <div class="feat"><span class="feat-dot dot-medi"></span>Live TCP data flow</div>
+          <div class="feat"><span class="feat-dot dot-medi"></span>Instant PDF reports</div>
+          <div class="feat"><span class="feat-dot dot-medi"></span>Patient management</div>
+        </div>
+        <a href="medicloud/index.html" class="product-link link-medi">Learn More &#8594;</a>
+      </div>
+
+      <!-- AttendPro Card -->
+      <div class="product-card card-attend fade-up delay-3" onclick="window.location.href='attendpro/index.html'">
+        <div style="background:linear-gradient(135deg,#0f172a,#1e3a8a);border-radius:12px;padding:16px;margin-bottom:24px;border:1px solid rgba(96,211,148,0.2)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:28px;height:28px;background:#60d394;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#065f46">A</div>
+              <span style="font-size:12px;font-weight:700;color:#fff">AttendPro</span>
+            </div>
+            <div style="font-size:16px;font-weight:900;color:#60d394;font-family:serif">91%</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:8px 10px;display:flex;align-items:center;gap:8px">
+              <div style="width:24px;height:24px;border-radius:50%;background:#4caf50;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff">KD</div>
+              <div style="flex:1;font-size:11px;color:#fff;font-weight:500">Kuntal Das</div>
+              <div style="font-size:9px;background:rgba(96,211,148,0.2);color:#60d394;padding:1px 7px;border-radius:100px;font-weight:600">✓ 9:02</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:8px 10px;display:flex;align-items:center;gap:8px">
+              <div style="width:24px;height:24px;border-radius:50%;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff">RS</div>
+              <div style="flex:1;font-size:11px;color:#fff;font-weight:500">Rahul Sharma</div>
+              <div style="font-size:9px;background:rgba(96,211,148,0.2);color:#60d394;padding:1px 7px;border-radius:100px;font-weight:600">✓ 9:15</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:8px 10px;display:flex;align-items:center;gap:8px">
+              <div style="width:24px;height:24px;border-radius:50%;background:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff">PD</div>
+              <div style="flex:1;font-size:11px;color:#fff;font-weight:500">Priya Dey</div>
+              <div style="font-size:9px;background:rgba(245,158,11,0.2);color:#fcd34d;padding:1px 7px;border-radius:100px;font-weight:600">Leave</div>
+            </div>
+          </div>
+        </div>
+        <div class="product-tag tag-attend">&#9679; HR &amp; Payroll</div>
+        <div class="product-name">AttendPro</div>
+        <p class="product-desc">Complete HRMS — face recognition attendance, payroll automation, overtime detection, PDF payslips with LOP &amp; OT, and auto email delivery.</p>
+        <div class="product-features">
+          <div class="feat"><span class="feat-dot dot-attend"></span>Face recognition check-in</div>
+          <div class="feat"><span class="feat-dot dot-attend"></span>Overtime auto-detection</div>
+          <div class="feat"><span class="feat-dot dot-attend"></span>PDF payslip with LOP &amp; OT</div>
+          <div class="feat"><span class="feat-dot dot-attend"></span>Auto email on payment</div>
+        </div>
+        <a href="attendpro/index.html" class="product-link link-attend">Learn More &#8594;</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHY VORPET -->
+<section class="why-wrap" id="why">
+  <div class="why-inner">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-bottom:64px" class="fade-up">
+      <div>
+        <div class="section-label">Why Vorpet</div>
+        <div class="section-title">Software built different.</div>
+        <p class="section-sub">We are not a generic SaaS company. We build targeted tools for specific Indian business problems — restaurants, labs, and workplaces.</p>
+        <div style="margin-top:28px;display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;align-items:flex-start;gap:14px">
+            <div style="width:36px;height:36px;background:#dcfce7;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🇮🇳</div>
+            <div><div style="font-weight:700;font-size:15px;color:var(--ink);margin-bottom:3px">Proudly Indian</div><div style="font-size:13px;color:var(--muted);line-height:1.6">Built in India, for India. GST-ready, INR native, works on slow networks and power cuts.</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:14px">
+            <div style="width:36px;height:36px;background:#fef3c7;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">⚡</div>
+            <div><div style="font-weight:700;font-size:15px;color:var(--ink);margin-bottom:3px">No training needed</div><div style="font-size:13px;color:var(--muted);line-height:1.6">Intuitive enough for any staff member to learn in under 30 minutes. Seriously.</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:14px">
+            <div style="width:36px;height:36px;background:#dbeafe;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">☁️</div>
+            <div><div style="font-weight:700;font-size:15px;color:var(--ink);margin-bottom:3px">Always online, zero setup</div><div style="font-size:13px;color:var(--muted);line-height:1.6">Cloud hosted, HTTPS secured, ₹0 setup cost. Start using today, no IT team needed.</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- SVG Illustration -->
+      <div style="position:relative">
+        <svg viewBox="0 0 480 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:480px">
+          <!-- Background circle -->
+          <circle cx="240" cy="200" r="180" fill="#f0fdf4" opacity="0.6"/>
+          <circle cx="240" cy="200" r="140" fill="#dcfce7" opacity="0.4"/>
+
+          <!-- Restaurant building -->
+          <rect x="100" y="180" width="280" height="160" rx="8" fill="#fff" stroke="#bbf7d0" stroke-width="2"/>
+          <rect x="100" y="160" width="280" height="28" rx="4" fill="#14532d"/>
+          <text x="240" y="179" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="sans-serif">🍛 Restaurant &amp; Business Hub</text>
+
+          <!-- Windows on building -->
+          <rect x="120" y="200" width="50" height="40" rx="4" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+          <rect x="190" y="200" width="50" height="40" rx="4" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+          <rect x="260" y="200" width="50" height="40" rx="4" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+          <!-- Window content -->
+          <text x="145" y="225" text-anchor="middle" font-size="18">📊</text>
+          <text x="215" y="225" text-anchor="middle" font-size="18">🧾</text>
+          <text x="285" y="225" text-anchor="middle" font-size="18">👥</text>
+
+          <!-- Door -->
+          <rect x="205" y="270" width="70" height="70" rx="4" fill="#14532d" opacity="0.15" stroke="#16a34a" stroke-width="1.5"/>
+          <circle cx="268" cy="305" r="4" fill="#16a34a"/>
+
+          <!-- Person 1 - Waiter -->
+          <circle cx="140" cy="148" r="22" fill="#fde68a"/>
+          <ellipse cx="140" cy="148" rx="22" ry="22" fill="#fde68a"/>
+          <!-- Face -->
+          <circle cx="133" cy="143" r="3" fill="#1a1a1a"/>
+          <circle cx="147" cy="143" r="3" fill="#1a1a1a"/>
+          <path d="M134 153 Q140 158 146 153" stroke="#1a1a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <!-- Waiter body -->
+          <rect x="122" y="170" width="36" height="50" rx="4" fill="#1a1a2e"/>
+          <!-- Bow tie -->
+          <polygon points="136,178 140,182 144,178 140,174" fill="#f97316"/>
+          <!-- Tablet in hand -->
+          <rect x="152" y="180" width="22" height="30" rx="3" fill="#0f1117" stroke="#f97316" stroke-width="1.5"/>
+          <rect x="154" y="183" width="18" height="20" rx="2" fill="#1e3a8a"/>
+          <text x="163" y="196" text-anchor="middle" font-size="8" fill="#60d394">📋</text>
+          <text x="140" y="232" text-anchor="middle" font-size="9" fill="#6b7280" font-family="sans-serif">Waiter</text>
+
+          <!-- Person 2 - Manager with laptop -->
+          <circle cx="240" cy="132" r="26" fill="#fed7aa"/>
+          <circle cx="231" cy="126" r="3.5" fill="#1a1a1a"/>
+          <circle cx="249" cy="126" r="3.5" fill="#1a1a1a"/>
+          <path d="M233 140 Q240 146 247 140" stroke="#1a1a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <!-- Hair -->
+          <path d="M214 126 Q215 108 240 106 Q265 108 266 126" fill="#1a1a1a"/>
+          <!-- Manager body -->
+          <rect x="218" y="158" width="44" height="55" rx="4" fill="#1e3a8a"/>
+          <!-- Tie -->
+          <polygon points="237,163 243,163 241,200 239,200" fill="#60d394"/>
+          <!-- Laptop -->
+          <rect x="208" y="213" width="64" height="38" rx="4" fill="#1a1a2e"/>
+          <rect x="210" y="215" width="60" height="32" rx="3" fill="#14532d"/>
+          <!-- Screen content -->
+          <rect x="213" y="218" width="54" height="26" rx="2" fill="#16a34a" opacity="0.2"/>
+          <text x="240" y="232" text-anchor="middle" font-size="14">📈</text>
+          <!-- Laptop base -->
+          <rect x="200" y="251" width="80" height="6" rx="3" fill="#333"/>
+          <text x="240" y="268" text-anchor="middle" font-size="9" fill="#6b7280" font-family="sans-serif">Manager</text>
+
+          <!-- Person 3 - Chef -->
+          <circle cx="340" cy="148" r="22" fill="#fde68a"/>
+          <circle cx="333" cy="143" r="3" fill="#1a1a1a"/>
+          <circle cx="347" cy="143" r="3" fill="#1a1a1a"/>
+          <path d="M334 153 Q340 158 346 153" stroke="#1a1a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <!-- Chef hat -->
+          <ellipse cx="340" cy="126" rx="20" ry="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+          <rect x="322" y="106" width="36" height="22" rx="10" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+          <!-- Red stripe on hat -->
+          <rect x="322" y="124" width="36" height="4" rx="0" fill="#ef4444"/>
+          <!-- Chef body -->
+          <rect x="322" y="170" width="36" height="50" rx="4" fill="#fff" stroke="#e2e8f0" stroke-width="1.5"/>
+          <!-- Chef buttons -->
+          <circle cx="340" cy="182" r="2" fill="#e2e8f0"/>
+          <circle cx="340" cy="192" r="2" fill="#e2e8f0"/>
+          <circle cx="340" cy="202" r="2" fill="#e2e8f0"/>
+          <!-- Arms crossed -->
+          <rect x="310" y="185" width="12" height="25" rx="6" fill="#fde68a"/>
+          <rect x="358" y="185" width="12" height="25" rx="6" fill="#fde68a"/>
+          <text x="340" y="232" text-anchor="middle" font-size="9" fill="#6b7280" font-family="sans-serif">Chef</text>
+
+          <!-- Connection lines between people and building -->
+          <line x1="162" y1="220" x2="200" y2="220" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
+          <line x1="280" y1="220" x2="318" y2="220" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
+
+          <!-- Floating badges -->
+          <rect x="60" y="60" width="90" height="28" rx="14" fill="#fff" stroke="#bbf7d0" stroke-width="1.5"/>
+          <text x="105" y="79" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a" font-family="sans-serif">✓ GST Ready</text>
+
+          <rect x="330" y="60" width="100" height="28" rx="14" fill="#fff" stroke="#bbf7d0" stroke-width="1.5"/>
+          <text x="380" y="79" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a" font-family="sans-serif">📶 Works Offline</text>
+
+          <rect x="330" y="310" width="110" height="28" rx="14" fill="#fff" stroke="#dbeafe" stroke-width="1.5"/>
+          <text x="385" y="329" text-anchor="middle" font-size="10" font-weight="600" fill="#1e3a8a" font-family="sans-serif">🔒 Secure &amp; HTTPS</text>
+
+          <rect x="60" y="310" width="100" height="28" rx="14" fill="#fff" stroke="#fef3c7" stroke-width="1.5"/>
+          <text x="110" y="329" text-anchor="middle" font-size="10" font-weight="600" fill="#92400e" font-family="sans-serif">⭐ ₹0 Setup Cost</text>
+        </svg>
+      </div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card fade-up delay-1">
+        <div class="why-card-top"><div class="why-num">01</div><div class="why-icon wi-1">&#128176;</div></div>
+        <div class="why-title">No setup fees, ever</div>
+        <p class="why-desc">Get started immediately. No implementation consultants, no onboarding fees, no hidden costs. Just sign up and go.</p>
+      </div>
+      <div class="why-card fade-up delay-2">
+        <div class="why-card-top"><div class="why-num">02</div><div class="why-icon wi-2">&#128246;</div></div>
+        <div class="why-title">Works on Indian internet</div>
+        <p class="why-desc">Designed for slow networks and power cuts. Offline-first where it matters. Built for real Indian business conditions.</p>
+      </div>
+      <div class="why-card fade-up delay-3">
+        <div class="why-card-top"><div class="why-num">03</div><div class="why-icon wi-3">&#127988;</div></div>
+        <div class="why-title">GST &amp; INR native</div>
+        <p class="why-desc">Not a foreign product retrofitted for India. GST compliance, INR billing, and Indian tax rules are built in from day one.</p>
+      </div>
+      <div class="why-card fade-up delay-1">
+        <div class="why-card-top"><div class="why-num">04</div><div class="why-icon wi-4">&#128274;</div></div>
+        <div class="why-title">Your data stays yours</div>
+        <p class="why-desc">Hosted in India, encrypted in transit and at rest. We never sell your data or use it for advertising.</p>
+      </div>
+      <div class="why-card fade-up delay-2">
+        <div class="why-card-top"><div class="why-num">05</div><div class="why-icon wi-5">&#9889;</div></div>
+        <div class="why-title">No training required</div>
+        <p class="why-desc">Built for non-technical users. Your staff can learn any of our products in under 30 minutes. Seriously.</p>
+      </div>
+      <div class="why-card fade-up delay-3">
+        <div class="why-card-top"><div class="why-num">06</div><div class="why-icon wi-6">&#128200;</div></div>
+        <div class="why-title">Always improving</div>
+        <p class="why-desc">We ship updates regularly based on real feedback. Your subscription gets better every month at no extra cost.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-wrap" id="about">
+  <div class="about-grid-bg"></div>
+  <div class="about-inner">
+    <div class="fade-up">
+      <div class="about-label">About Vorpet</div>
+      <div class="about-title">Built for the businesses that run India.</div>
+      <p class="about-desc">We are a small team of passionate builders creating affordable, practical software for Indian businesses. No fluff, no bloat &mdash; just tools that solve real problems.</p>
+      <div class="about-stats">
+        <div class="astat"><div class="astat-num">3</div><div class="astat-label">Live Products</div></div>
+        <div class="astat"><div class="astat-num">100%</div><div class="astat-label">Made in India</div></div>
+        <div class="astat"><div class="astat-num">&#8377;0</div><div class="astat-label">Setup Cost</div></div>
+        <div class="astat"><div class="astat-num">24/7</div><div class="astat-label">Cloud Uptime</div></div>
+      </div>
+    </div>
+    <div class="about-right fade-up delay-2">
+      <div class="value-card"><div class="value-icon">&#127919;</div><div class="value-title">Built for India</div><div class="value-desc">GST-ready, supports INR, works on slow networks. Designed from day one for Indian business realities.</div></div>
+      <div class="value-card"><div class="value-icon">&#9889;</div><div class="value-title">Simple &amp; Fast</div><div class="value-desc">No training needed. Our products are intuitive enough for anyone to pick up and use within minutes.</div></div>
+      <div class="value-card"><div class="value-icon">&#128274;</div><div class="value-title">Secure &amp; Reliable</div><div class="value-desc">Your data is encrypted and backed up. HTTPS everywhere. We take security seriously so you don't have to.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-wrap" id="contact">
+  <div class="contact-inner">
+    <div class="contact-info fade-up">
+      <div class="section-label">Contact Us</div>
+      <div class="contact-info-title">Let's talk about your business.</div>
+      <p class="contact-info-sub">Have a question about our products? Want a demo? Or just want to say hi? We'd love to hear from you.</p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="ci-icon">&#128231;</div>
+          <div><div class="ci-label">Email</div><div class="ci-value">contact@vorpet.com</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="ci-icon">&#127758;</div>
+          <div><div class="ci-label">Products</div><div class="ci-value">currycloud.mooo.com &nbsp;&#183;&nbsp; medicloud.mooo.com &nbsp;&#183;&nbsp; attendpro.mooo.com</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="ci-icon">&#127470;&#127475;</div>
+          <div><div class="ci-label">Location</div><div class="ci-value">India &mdash; serving businesses across the country</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="ci-icon">&#128222;</div>
+          <div><div class="ci-label">Phone</div><div class="ci-value">Kuntal Das &nbsp;·&nbsp; +91 97326 09965</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="ci-icon">&#9200;</div>
+          <div><div class="ci-label">Response Time</div><div class="ci-value">We typically reply within 24 hours</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form fade-up delay-2">
+      <div class="section-label" style="margin-bottom:24px">Send a Message</div>
+      <form id="contactForm" action="https://formspree.io/f/meenkbbk" method="POST" onsubmit="submitContact(event)">
+        <input type="hidden" name="_subject" value="New enquiry from Vorpet website">
+        <input type="hidden" name="_replyto" value="">
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" name="first_name" placeholder="Rahul" required></div>
+          <div class="form-group"><label>Last Name</label><input type="text" name="last_name" placeholder="Sharma" required></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="rahul@business.com" required></div>
+        <div class="form-group"><label>Phone (optional)</label><input type="tel" name="phone" placeholder="+91 98765 43210"></div>
+        <div class="form-group"><label>I am interested in</label>
+          <select name="product">
+            <option value="">Select a product...</option>
+            <option>CurryCloud — Restaurant Management</option>
+            <option>MediCloud — Lab Middleware</option>
+            <option>AttendPro — HR &amp; Attendance</option>
+            <option>All Products</option>
+            <option>General Enquiry</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Message</label><textarea name="message" placeholder="Tell us about your business and what you need..."></textarea></div>
+        <button type="submit" class="form-submit" id="submitBtn">Send Message &#8594;</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-wrap">
+  <div class="cta-orb"></div>
+  <div class="cta-inner fade-up">
+    <div class="cta-title">Ready to grow your <span>business?</span></div>
+    <p class="cta-sub">Pick the product that fits your needs. All products are live and ready to use right now.</p>
+    <div class="cta-btns">
+      <a href="currycloud/index.html" class="btn-dark" style="background:#16a34a;color:#fff;font-weight:700">
+        &#127807; CurryCloud
+      </a>
+      <a href="medicloud/index.html" class="btn-dark" style="background:#0f1117;border:2px solid #f97316;color:#fff;font-weight:700">
+        &#128299; MediCloud
+      </a>
+      <a href="attendpro/index.html" class="btn-dark" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;font-weight:700">
+        &#128100; AttendPro
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <a href="#" class="footer-logo" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+    <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center">
+      <svg width="22" height="20" viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 13 Q13 7 16 2" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M26 11 Q23 4 26 0" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M36 13 Q33 7 36 2" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/><ellipse cx="26" cy="18" rx="20" ry="5" fill="#f59e0b"/><path d="M10 16 Q16 11 21 16 Q26 21 31 16 Q36 11 42 16" stroke="#111" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M6 18 Q6 40 26 40 Q46 40 46 18Z" fill="#f59e0b"/><path d="M11 23 Q10 33 13 38" stroke="#fde68a" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/></svg>
+    </div>
+    <span style="font-family:Fraunces,serif;font-weight:800;font-size:18px;color:#fff">Vor<span style="color:#f59e0b">pet</span></span>
+  </a>
+    <div class="footer-links">
+      <a href="currycloud/index.html">CurryCloud</a>
+      <a href="medicloud/index.html">MediCloud</a>
+      <a href="attendpro/index.html">AttendPro</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="footer-copy">&#169; 2026 Vorpet. Made with &#10084;&#65039; in India.</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add("visible") });
+}, { threshold: 0.1 });
+document.querySelectorAll(".fade-up").forEach(el => observer.observe(el));
+window.addEventListener("scroll", () => {
+  document.querySelector("nav").style.boxShadow = window.scrollY > 20 ? "0 2px 20px rgba(0,0,0,0.08)" : "none";
+});
+
+// Hero slider
+const slides = document.querySelectorAll(".slide");
+const dots = document.querySelectorAll(".slider-dot");
+const label = document.getElementById("sliderLabel");
+const labels = ["&#127843; CurryCloud — Restaurant Management", "&#128299; MediCloud — Lab Middleware v5.0", "&#8987; AttendPro — HR & Attendance"];
+let current = 0, timer;
+
+function goSlide(n) {
+  slides[current].classList.remove("active");
+  dots[current].classList.remove("active");
+  current = n;
+  slides[current].classList.add("active");
+  dots[current].classList.add("active");
+  label.innerHTML = labels[current];
+  clearInterval(timer);
+  timer = setInterval(() => goSlide((current + 1) % slides.length), 3500);
+}
+
+timer = setInterval(() => goSlide((current + 1) % slides.length), 3500);
+async function submitContact(e) {
+  e.preventDefault();
+  const btn = document.getElementById("submitBtn");
+  const t = document.getElementById("toast");
+  const form = document.getElementById("contactForm");
+
+  btn.textContent = "Sending...";
+  btn.disabled = true;
+  btn.style.opacity = "0.7";
+
+  try {
+    const res = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { "Accept": "application/json" }
+    });
+
+    if (res.ok) {
+      t.innerHTML = "&#10003; Message sent! Kuntal will reply within 24 hours.";
+      t.style.background = "#065f46";
+      t.classList.add("show");
+      form.reset();
+    } else {
+      throw new Error("Failed");
+    }
+  } catch {
+    t.innerHTML = "&#9888; Something went wrong. Please email contact@vorpet.com directly.";
+    t.style.background = "#dc2626";
+    t.classList.add("show");
+  }
+
+  btn.textContent = "Send Message →";
+  btn.disabled = false;
+  btn.style.opacity = "1";
+  setTimeout(() => { t.classList.remove("show"); t.style.background = ""; }, 5000);
+}
+</script>
+</body>
+</html>
